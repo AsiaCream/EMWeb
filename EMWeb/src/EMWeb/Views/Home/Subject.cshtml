@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Subject>
+<div class="container">
+    <h2>当前毕业设计选择情况</h2>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>题目</th>
+                <th>选择老师</th>
+                <th>学生姓名</th>
+                <th>提交时间</th>
+                <th>审核状态</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var x in Model)
+            {
+                <tr>
+                    <td>@x.Title</td>
+                    <td>@x.Teacher.Name</td>
+                    <td>@x.Student.Name</td>
+                    <td>@x.PostTime</td>
+                    <td>@x.Draw</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

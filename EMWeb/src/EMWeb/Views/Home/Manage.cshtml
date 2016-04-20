@@ -1,0 +1,231 @@
+﻿@model Teacher
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-3">
+                <div class="caption">
+                    <div class="thumbnail">
+                        <img src="~/images/person.png" />
+                    </div>
+                </div>
+                <table class="table">
+                    <tbody>
+                        @if (User.IsInRole("系主任"))
+                        {
+                            <tr>
+                                <td><a class="btn btn-primary" id="addCollege">添加学院</a></td>
+                            </tr>
+                            <tr>
+                                <td><a class="btn btn-primary" id="addMajor">添加专业</a></td>
+                            </tr>
+                            <tr>
+                                <td><a class="btn btn-primary" id="addTeacher">添加指导老师</a></td>
+                            </tr>
+                        }
+                        <tr>
+                            <td><a class="btn btn-primary" asp-action="Subject" asp-controller="Admin">查看选题情况</a></td>
+                        </tr>
+                        <tr>
+                            <td><a class="btn btn-primary">查看毕设文档</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-9">
+                <h2>@User.Current.UserName</h2>
+                <hr />
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>姓名</th>
+                        </tr>
+                        <tr>
+                            <th>编号</th>
+                        </tr>
+                        <tr>
+                            <th>专业</th>
+                        </tr>
+                        <tr>
+                            <th>学院</th>
+                        </tr>
+                        <tr>
+                            <th>添加时间</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="createCollege">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加学院</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="text" name="title" id="title" class="form-control" placeholder="请填写学院名称" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
+                <button type="button" id="sendCollege" class="btn btn-primary">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="createMajor">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加专业</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <select class="form-control" name="college" id="major-College">
+                        @foreach(College x in ViewBag.College)
+                        {
+                            <option>@x.Title</option>
+                        }
+                    </select><br />
+                    <input type="text" name="majortitle" id="majortitle" class="form-control" placeholder="请填写学院相应专业名称" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
+                <button type="button" id="sendMajor" class="btn btn-primary">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="createTeacher">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加指导老师</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="text" name="teacherName" id="teacherName" class="form-control" placeholder="教师姓名" /><br />
+                    <input type="text" name="teacherNumber" id="teacherNumber" class="form-control" placeholder="教师编号" /><br />
+                    <select name="IsHeadTeacher" id="IsHeadTeacher" class="form-control">
+                        <option>NO</option>
+                        <option>YES</option>
+                    </select><br />
+                    <input type="text" name="teacherUserName" id="teacherUserName" class="form-control" placeholder="教师用户名" /><br />
+                    <input type="password" name="teacherPwd" id="teacherPwd" class="form-control" placeholder="教师登录密码" /><br />
+                    <select class="form-control" name="college" id="teacher-College">
+                            <option>请选择学院</option>
+                        @foreach (College x in ViewBag.College)
+                        {
+                            <option>@x.Title</option>
+                        }
+                    </select><br />
+                    <div id="major-list"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
+                <button type="button" id="sendTeacher" class="btn btn-primary">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/scripts/jquery-2.1.1.js"></script>
+<script type="text/javascript">
+    $("#addCollege").click(function () {
+        $("#createCollege").modal("show");
+    });
+    $("#sendCollege").click(function () {
+        var title = $("#title").val();
+        if (title == "") {
+            alert("题目不能为空");
+        }
+        else {
+            var url = "/Admin/CreateCollege";
+            var params = { title: title };
+            $.post(url, params, function (data) {
+                if (data == "success") {
+                    alert("1111");
+                }
+                else {
+                    alert("2222");
+                }
+            });
+        }
+    });
+
+    $("#addMajor").click(function () {
+        $("#createMajor").modal("show");
+    });
+    $("#sendMajor").click(function () {
+        var title = $("#majortitle").val();
+        var college = $("#major-College").val();
+        if (title == "") {
+            alert("专业不能为空");
+        }
+        else {
+            var url = "/System/CreateMajor";
+            var params = { title: title,college:college };
+            $.post(url, params, function (data) {
+                if (data == "success") {
+                    alert("添加成功");
+                }
+                else {
+                    alert("添加失败");
+                }
+            });
+        }
+    });
+
+    $("#addTeacher").click(function () {
+        $("#createTeacher").modal("show");
+    });
+    $("#teacher-College").change(function(){
+        var colleges=$("#teacher-College").val();
+        var url = "/Home/GetMajor";
+        var params={college:colleges};
+        $.get(url,params,function(html){
+            $("#major-list").html(html);
+        });
+    });
+    $("#sendTeacher").click(function () {
+        var college = $("#teacher-College").val();
+        var username = $("#teacherUserName").val();
+        var password = $("#teacherPwd").val();
+        var name = $("#teacherName").val();
+        var major = $("#major").val();
+        var number = $("#teacherNumber").val();
+        var isheadTeacher = $("#IsHeadTeacher").val();
+        var params = { name: name, number: number, username: username, password: password, college: college, major: major, isheadTeacher: isheadTeacher };
+        if (college == "请选择学院") {
+            alert("请正确选择学院");
+        }
+        else if(username==""){
+            alert("用户名不能为空");
+        }
+        else if (password == "") {
+            alert("密码不能为空");
+        }
+        else if (name == "") {
+            alert("名字不能为空");
+        }
+        else {
+            $.post("/Account/CreateTeacher", params, function (data) {
+                if (data == "success") {
+                    alert("添加成功");
+                }
+                else if (data == "error") {
+                    alert("重复创建");
+                }
+                else {
+                    alert("添加失败");
+                }
+            });
+        }
+        });
+</script>

@@ -1,0 +1,94 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>毕业设计高效管理网站</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="~/styles/bootstrap.css" media="screen">
+    <link rel="stylesheet" href="~/styles/font-awesome.min.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="~/script/html5shiv.js"></script>
+      <script src="~/script/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+    <nav class="navbar navbar-default" style="border-radius:0;">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" asp-action="Index" asp-controller="Home">EMWeb</a>
+            </div>
+
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a asp-action="Subject" aps-controller="Home">选题 <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#">开题</a></li>
+                    <li><a href="#">报告</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">毕业设计 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">毕业设计选题</a></li>
+                            <li><a href="#">毕业设计开题</a></li>
+                            <li><a href="#">毕业设计报告</a></li>
+                            <li><a href="#">毕业设计评分</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="navbar-form navbar-left" role="search">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="Search...">
+                    </div>
+                    <button type="button" class="btn btn-info">搜索</button>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">管理中心 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            @if (User.IsInRole("学生"))
+                            {
+                                <li><a asp-action="Center" asp-controller="Home">个人中心</a></li>
+                            }
+                            else
+                            {
+                                <li><a asp-action="Manage" asp-controller="Home">个人中心</a></li>
+
+                            }
+                            <li><a asp-action="Modify" asp-controller="Account">修改密码</a></li>
+                            <li><a href="javascript:$('#Logout').submit()">退出</a></li>
+                        </ul>
+                        <form asp-action="Logout" asp-controller="Account" id="Logout"></form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div>
+        @RenderBody()
+    </div>
+    <div class="container">
+        <footer>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p>Design by &copy;<a href="http://www.asiacream.cn" target="_blank">Cream</a>.</p>
+                    <p>技术支持 <a href="http://www.codecomb.com" target="_blank">码锋科技有限责任公司</a>.</p>
+                </div>
+            </div>
+
+        </footer>
+    </div>
+    <script src="~/scripts/jquery-2.1.1.js"></script>
+    <script src="~/scripts/bootstrap.min.js"></script>
+    <script src="~/scripts/custom.js"></script>
+</body>
+</html>
+

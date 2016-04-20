@@ -1,0 +1,156 @@
+﻿@{ 
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>毕业设计高效管理网站</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="~/styles/bootstrap.css" media="screen">
+    <link rel="stylesheet" href="~/styles/font-awesome.min.css">
+    <link rel="stylesheet" href="~/styles/custom.min.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="~/script/html5shiv.js"></script>
+      <script src="~/script/respond.min.js"></script>
+    <![endif]-->
+    <script>
+
+     var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-23019901-1']);
+      _gaq.push(['_setDomainName', "bootswatch.com"]);
+        _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+     (function() {
+       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+     })();
+
+    </script>
+</head>
+<body id="home">
+    <div class="navbar navbar-default navbar-fixed-top navbar-transparent">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="./" class="navbar-brand"><img>EMWeb</a>
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-main">
+                <ul class="nav navbar-nav">
+                    @*<li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">学院 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" aria-labelledby="themes">
+                            <li><a href="./default/">Default</a></li>
+                            <li class="divider"></li>
+                            <li><a href="./cerulean/">Cerulean</a></li>
+                            <li><a href="./cosmo/">Cosmo</a></li>
+                            <li><a href="./cyborg/">Cyborg</a></li>
+                            <li><a href="./darkly/">Darkly</a></li>
+                            <li><a href="./flatly/">Flatly</a></li>
+                            <li><a href="./journal/">Journal</a></li>
+                            <li><a href="./lumen/">Lumen</a></li>
+                            <li><a href="./paper/">Paper</a></li>
+                            <li><a href="./readable/">Readable</a></li>
+                            <li><a href="./sandstone/">Sandstone</a></li>
+                            <li><a href="./simplex/">Simplex</a></li>
+                            <li><a href="./slate/">Slate</a></li>
+                            <li><a href="./spacelab/">Spacelab</a></li>
+                            <li><a href="./superhero/">Superhero</a></li>
+                            <li><a href="./united/">United</a></li>
+                            <li><a href="./yeti/">Yeti</a></li>
+                        </ul>
+                    </li>*@
+                    <li>
+                        <a asp-action="Help" asp-controller="Home">帮助说明</a>
+                    </li>
+                </ul>
+
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a asp-action="Login" asp-controller="Account">登录</a></li>
+                    <li><a asp-action="Register" asp-controller="Account">注册</a></li>
+                </ul>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="splash" style="height:500px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- <div><img class="logo" src="assets/img/logo.png"></div> -->
+                    <h1>齐齐哈尔大学毕业设计高效管理网站</h1>
+                    <h2>欢迎我校学生</h2>
+                    <h4>目前为止已经有866名我校毕业生使用过</h4>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="section-tout">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-sm-6">
+                    <h3><i class="fa fa-file-o"></i>开发目的</h3>
+                    <p>传统的毕业设计中，需要花费太多的时间，并且需要组织学生，以及花费老师不需要的时间去审核学生论文.</p>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <h3><i class="fa fa-github"></i>开发原因</h3>
+                    <p>为了改变这种传统的效率低下的毕业设计模式，节约广大师生的时间，特地设计此网站.</p>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <h3><i class="fa fa-wrench"></i> 网站风格</h3>
+                    <p>为了保证网站的整齐统一，于是采用了bootstrap中的扁平风格.</p>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <h3><i class="fa fa-cogs"></i> 数据库使用</h3>
+                    <p>数据库上开发中使用了SQLite小型数据库以便测试，在实际过程中会使用SQLSERVER或者PROGRESQL.</p>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <h3><i class="fa fa-cloud"></i> 开发技术</h3>
+                    <p>本网站的开发使用到了ASP.NET MVC5的下一代，VNEXT，并且使用CODECOMB开源框架作为设计基础.</p>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <h3><i class="fa fa-bullhorn"></i> 开发周期</h3>
+                    <p>项目从构思到设计完成大约需要3个星期左右的时间.</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="container">
+        <footer>
+            <div class="row">
+                <div class="col-lg-12 text-center" >
+                    <p>Design by &copy;<a href="http://www.asiacream.cn" target="_blank">Cream</a>.</p> 
+                    <p>技术支持 <a href="http://www.codecomb.com" target="_blank">码锋科技有限责任公司</a>.</p>
+                </div>
+            </div>
+
+        </footer>
+
+
+    </div>
+
+
+    <script src="~/scripts/jquery-2.1.1.js"></script>
+    <script src="~/scripts/bootstrap.min.js"></script>
+    <script src="~/scripts/custom.js"></script>
+    <script>
+      !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+    </script>
+    <script type="text/javascript">/* <![CDATA[ */(function(d,s,a,i,j,r,l,m,t){try{l=d.getElementsByTagName('a');t=d.createElement('textarea');for(i=0;l.length-i;i++){try{a=l[i].href;s=a.indexOf('/cdn-cgi/l/email-protection');m=a.length;if(a&&s>-1&&m>28){j=28+s;s='';if(j<m){r='0x'+a.substr(j,2)|0;for(j+=2;j<m&&a.charAt(j)!='X';j+=2)s+='%'+('0'+('0x'+a.substr(j,2)^r).toString(16)).slice(-2);j++;s=decodeURIComponent(s)+a.substr(j,m-j)}t.innerHTML=s.replace(/</g,'&lt;').replace(/>/g,'&gt;');l[i].href='mailto:'+t.value}}catch(e){}}}catch(e){}})(document);/* ]]> */</script>
+</body>
+</html>
+

@@ -1,0 +1,176 @@
+﻿@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>毕业设计高效管理网站注册</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="stylesheet" href="~/styles/bootstrap.css" media="screen">
+    <link rel="stylesheet" href="~/styles/font-awesome.min.css">
+    <link rel="stylesheet" href="~/styles/custom.min.css">
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="~/script/html5shiv.js"></script>
+      <script src="~/script/respond.min.js"></script>
+    <![endif]-->
+    <script>
+
+     var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-23019901-1']);
+      _gaq.push(['_setDomainName', "bootswatch.com"]);
+        _gaq.push(['_setAllowLinker', true]);
+      _gaq.push(['_trackPageview']);
+
+     (function() {
+       var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+       ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+       var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+     })();
+
+    </script>
+</head>
+<body id="home">
+    <div class="navbar navbar-default navbar-fixed-top navbar-transparent">
+        <div class="container">
+            <div class="navbar-header">
+                <a asp-action="Index" asp-controller="Home" class="navbar-brand"><img>EMWeb</a>
+                <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div class="navbar-collapse collapse" id="navbar-main">
+                <ul class="nav navbar-nav">
+                    @*<li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">学院 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" aria-labelledby="themes">
+                            <li><a href="./default/">Default</a></li>
+                            <li class="divider"></li>
+                            <li><a href="./cerulean/">Cerulean</a></li>
+                            <li><a href="./cosmo/">Cosmo</a></li>
+                            <li><a href="./cyborg/">Cyborg</a></li>
+                            <li><a href="./darkly/">Darkly</a></li>
+                            <li><a href="./flatly/">Flatly</a></li>
+                            <li><a href="./journal/">Journal</a></li>
+                            <li><a href="./lumen/">Lumen</a></li>
+                            <li><a href="./paper/">Paper</a></li>
+                            <li><a href="./readable/">Readable</a></li>
+                            <li><a href="./sandstone/">Sandstone</a></li>
+                            <li><a href="./simplex/">Simplex</a></li>
+                            <li><a href="./slate/">Slate</a></li>
+                            <li><a href="./spacelab/">Spacelab</a></li>
+                            <li><a href="./superhero/">Superhero</a></li>
+                            <li><a href="./united/">United</a></li>
+                            <li><a href="./yeti/">Yeti</a></li>
+                        </ul>
+                    </li>*@
+                    <li>
+                        <a asp-action="Help" asp-controller="Home">帮助说明</a>
+                    </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a asp-action="Login" asp-controller="Account">登录</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="splash" style="height:800px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <h1>欢迎我校广大师生</h1><br />
+                    <h1>进行注册</h1>
+                     
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <form>
+                        <input type="text" name="name" placeholder="姓名" id="name" class="form-control" /><br />
+                        <input type="text" name="number" placeholder="学号" id="number" class="form-control" /><br />
+                        <input type="text" name="username" placeholder="用户名" id="username" class="form-control" /><br />
+                        <input type="password" name="password" placeholder="密码" id="password" class="form-control" /><br />
+                        <input type="password" name="confirmpwd" placeholder="确认密码" id="confirmpwd" class="form-control" /><br />
+                        <select class="form-control" name="college" id="college">
+                            <option>请选择您的学院</option>
+                            @foreach(College x in ViewBag.College)
+                            {
+                                <option>@x.Title</option>
+                            }
+                        </select><br />
+                        <div id="major-html"></div>
+                    </form>
+                    <button type="button" id="send" class="btn btn-success form-control">注册</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="container">
+        <footer>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <p>Design by &copy;<a href="http://www.asiacream.cn" target="_blank">Cream</a>.</p>
+                    <p>技术支持 <a href="http://www.codecomb.com" target="_blank">码锋科技有限责任公司</a>.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="~/scripts/jquery-2.1.1.js"></script>
+    <script src="~/scripts/bootstrap.min.js"></script>
+    <script src="~/scripts/custom.js"></script>
+</body>
+</html>
+<script type="text/javascript">
+    $("#send").click(function () {
+        var name = $("#name").val();
+        var number = $("#number").val();
+        var username = $("#username").val();
+        var password = $("#password").val();
+        var confirmpwd = $("#confirmpwd").val();
+        var college = $("#college").val();
+        var major = $("#major").val();
+        if (username == "") {
+            alert("用户名不能为空");
+        }
+        else if (password == "") {
+            alert("密码不能为空");
+        }
+        else if (confirmpwd == "") {
+            alert("确认密码不能为空");
+        }
+        else if (confirmpwd != password) {
+            alert("两次输入密码不一致");
+        }
+        else if (college == "请选择您的学院") {
+            alert("请选择正确的学院");
+        }
+        else {
+            var url = "/Account/Register";
+            var params = { name:name,number:number,username: username, password: password, college: college, major: major };
+            $.post(url, params, function (data) {
+                if (data == "success") {
+                    alert("注册成功,点击确定后跳转至登录页面...");
+                    window.location.href = "/Account/Login";
+                }
+                else if (data == "error") {
+                    alert("用户名" + username + "已经存在");
+                }
+                else {
+                    alert("格式错误");
+                }
+            });
+        }
+    });
+    $("#college").change(function () {
+        var college = $("#college").val();
+        var url = "/Home/GetMajor";
+        var params = { college: college };
+        $.get(url, params, function (html) {
+        $("#major-html").html(html);
+        });
+    });
+</script>
+

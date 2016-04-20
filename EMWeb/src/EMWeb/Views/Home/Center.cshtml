@@ -1,0 +1,115 @@
+﻿@model Student
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-3">
+                <div class="caption">
+                    <div class="thumbnail">
+                        <img src="~/images/person.png" />
+                    </div>
+                </div>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td><a class="btn btn-primary" id="addSubject">添加毕业设计题目</a></td>
+                        </tr>
+                        <tr>
+                            <td><a class="btn btn-primary">提交毕业设计报告</a></td>
+                        </tr>
+                        <tr>
+                            <td><a class="btn btn-primary">添加毕业设计文件</a></td>
+                        </tr>
+                        <tr>
+                            <td><a class="btn btn-primary">添加毕业设计代码</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-9">
+                <h2>@User.Current.UserName</h2>
+                <hr />
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>姓名</th>
+                            <td>@Model.Name</td>
+                        </tr>
+                        <tr>
+                            <th>学号</th>
+                            <td>@Model.Number</td>
+                        </tr>
+                        <tr>
+                            <th>专业</th>
+                            <td>@Model.Major.Title</td>
+                        </tr>
+                        <tr>
+                            <th>学院</th>
+                            <td>@Model.College.Title</td>
+                        </tr>
+                        <tr>
+                            <th>注册时间</th>
+                            <td>@Model.CreateTime</td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal" id="createSubject">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加毕业设计选题</h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <select name="subjectTeacher" id="subjectTeacher" class="form-control">
+                        @foreach(Teacher x in ViewBag.Teacher)
+                        {
+                            <option>@x.Name</option>
+                        }
+                    </select><br />
+                    <input type="text" name="subjectTitle" id="subjectTitle" class="form-control" placeholder="请填写毕业设计题目" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
+                <button type="button" id="sendSubject" class="btn btn-primary">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/scripts/jquery-2.1.1.js"></script>
+<script type="text/javascript">
+    $("#addSubject").click(function () {
+        $("#createSubject").modal("show");
+    });
+    $("#sendSubject").click(function () {
+        var subjectTitle = $("#subjectTitle").val();
+        var subjectTeacher = $("#subjectTeacher").val();
+        if (subjectTitle == "") {
+            alert("题目不能为空");
+        }
+        else {
+            var url = "/Admin/CreateSubject";
+            var params = { title: subjectTitle, teacher: subjectTeacher };
+            $.post(url, params, function (data) {
+                if (data == "success") {
+                    alert("添加选题成功");
+                }
+                else if (date == "锁定") {
+                    alert("您题目已经审核通过，无法再提交题目")
+                }
+                else if(data=="重复添加"){
+                    alert("选题失败，" + subjectTitle+"已经有人选择了");
+                }
+                else {
+                    alert("添加失败");
+                }
+            });
+        }
+    });
+</script>
