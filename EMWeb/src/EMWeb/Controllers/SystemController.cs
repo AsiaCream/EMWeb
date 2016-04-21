@@ -42,30 +42,29 @@ namespace EMWeb.Controllers
             var log = DB.Logs
                 .OrderByDescending(x => x.Time)
                 .ToList();
-            //if (log.Count() != 0)
-            //{
-            //    var ret = new List<SystemLog>();
-            //    foreach (var x in log)
-            //    {
-            //        ret.Add(new SystemLog
-            //        {
-            //            Id = x.Id,
-            //            AdminNumber = DB.Teachers.Where(y => y.UserId == x.UserId).SingleOrDefault().Number,
-            //            AdminName = DB.Teachers.Where(y => y.UserId == x.UserId).SingleOrDefault().Name,
-            //            Role = x.Roles.ToString(),
-            //            Operation = x.Operation.ToString(),
-            //            Time = x.Time,
-            //            TargetNumber = x.Number,
-            //        });
-            //    };
+            if (log.Count() != 0)
+            {
+                var ret = new List<SystemLog>();
+                foreach (var x in log)
+                {
+                    ret.Add(new SystemLog
+                    {
+                        Id = x.Id,
+                        AdminNumber = DB.Teachers.Where(y => y.UserId == x.UserId).SingleOrDefault().Number,
+                        AdminName = DB.Teachers.Where(y => y.UserId == x.UserId).SingleOrDefault().Name,
+                        Role = x.Roles.ToString(),
+                        Operation = x.Operation.ToString(),
+                        Time = x.Time,
+                        TargetNumber = x.Number,
+                    });
+                };
 
-            //    return View(log);
-            //}
-            //else
-            //{
-            //    return RedirectToAction("Error", "Home");
-            //}
-            return View(log);
+                return View(ret);
+            }
+            else
+            {
+                return RedirectToAction("Error", "Home");
+            }
             
         }
     }
