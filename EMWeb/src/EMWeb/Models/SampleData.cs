@@ -71,6 +71,33 @@ namespace EMWeb.Models
                     MajorId = major.Id,
                 };
                 DB.Students.Add(studentdu);
+
+                var log1 = new Log {
+                    Roles = Roles.系主任,
+                    Operation = Operation.添加系主任,
+                    Time = DateTime.Now,
+                    Number = teacherzhang.Id,
+                    UserId = headteacher.Id
+                };
+                DB.Logs.Add(log1);
+
+                var log2 = new Log {
+                    Roles = Roles.系主任,
+                    Operation = Operation.添加老师,
+                    Time = DateTime.Now,
+                    Number = teacherfdd.Id,
+                    UserId = headteacher.Id
+                };
+                DB.Logs.Add(log2);
+
+                var log3 = new Log {
+                    Roles = Roles.系主任,
+                    Operation = Operation.添加学生,
+                    Time = DateTime.Now,
+                    Number = studentdu.Id,
+                    UserId = headteacher.Id
+                };
+                DB.Logs.Add(log3);
             }
             DB.SaveChanges();
         }
