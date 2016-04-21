@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Authorization;
+using System.Security.Claims;
 using EMWeb.Models;
 
 namespace EMWeb.Controllers
@@ -21,13 +22,13 @@ namespace EMWeb.Controllers
             var result = await SignInManager.PasswordSignInAsync(username, password, false, false);
             if (result.Succeeded)
             {
-                if (User.IsInRole("学生"))
+                if (User.AnyRoles("学生"))
                 {
-                    return Content("student");
+                    return Content("学生");
                 }
                 else
                 {
-                    return Content("teacher");
+                    return Content("老师");
                 }
             }
             else
@@ -118,24 +119,45 @@ namespace EMWeb.Controllers
                 if (isheadTeacher == "YES")
                 {
                     await UserManager.AddToRoleAsync(user, "系主任");
+                    var teacher = new Teacher
+                    {
+                        Name = name,
+                        Number = number,
+                        UserId = user.Id,
+                        CollegeId = col.Id,
+                        MajorId = maj.Id,
+                        CreateTime = DateTime.Now,
+                    };
+                    var log = new Log
+                    {
+                        UserId = User.Current.Id,
+                        Roles = Roles.系主任,
+                        Operation = Operation.添加系主任,
+                        Time = DateTime.Now,
+                        Number = teacher.Number,
+                    };
+                    DB.Logs.Add(log);
+                    DB.Teachers.Add(teacher);
+                    DB.SaveChanges();
+                    return Content("success");
                 }
                 else
                 {
                     await UserManager.AddToRoleAsync(user, "指导老师");
+                    var teacher = new Teacher
+                    {
+                        Name = name,
+                        Number = number,
+                        UserId = user.Id,
+                        CollegeId = col.Id,
+                        MajorId = maj.Id,
+                        CreateTime = DateTime.Now,
+                    };
+                    DB.Teachers.Add(teacher);
+                    DB.SaveChanges();
+                    return Content("success");
                 }
-                var teacher = new Teacher
-                {
-                    Name = name,
-                    Number = number,
-                    UserId = user.Id,
-                    CollegeId = col.Id,
-                    MajorId = maj.Id,
-                    CreateTime = DateTime.Now,
-                };
-                DB.Teachers.Add(teacher);
-                DB.SaveChanges();
-                return Content("success");
-            }
+                            }
         }
     }
 }
