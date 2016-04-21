@@ -78,7 +78,7 @@
             </div>
             <div class="modal-body">
                 <form>
-                    <input type="text" name="title" id="title" class="form-control" placeholder="请填写学院名称" />
+                    <input type="text" name="collegeTitle" id="collegeTitle" class="form-control" placeholder="请填写学院名称" />
                 </form>
             </div>
             <div class="modal-footer">
@@ -153,19 +153,22 @@
         $("#createCollege").modal("show");
     });
     $("#sendCollege").click(function () {
-        var title = $("#title").val();
+        var title = $("#collegeTitle").val();
         if (title == "") {
-            alert("题目不能为空");
+            alert("学院不能为空");
         }
         else {
-            var url = "/Admin/CreateCollege";
+            var url = "/System/CreateCollege";
             var params = { title: title };
             $.post(url, params, function (data) {
                 if (data == "success") {
-                    alert("1111");
+                    alert("添加成功");
+                }
+                else if(data=="error") {
+                    alert(title+"已经存在，请不要重复添加");
                 }
                 else {
-                    alert("2222");
+                    alert("添加失败");
                 }
             });
         }

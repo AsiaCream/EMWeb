@@ -35,6 +35,33 @@ namespace EMWeb.Controllers
             DB.SaveChanges();
             return Content("success");
         }
+        [Authorize(Roles =("系主任"))]
+        [HttpPost]
+        public IActionResult CreateCollege(College college)
+        {
+            var oldcollege = DB.Colleges
+                .Where(x => x.Title == college.Title)
+                .SingleOrDefault();
+            if (oldcollege != null)
+            {
+                return Content("error");
+            }
+            else
+            {
+                DB.Colleges.Add(college);
+                var log = new Log
+                {
+                    Roles = Roles.系主任,
+                    Operation = Operation.添加学院,
+                    Time = DateTime.Now,
+                    Number = college.Id,
+                    UserId = User.Current.Id,
+                };
+                DB.Logs.Add(log);
+                DB.SaveChanges();
+                return Content("success");
+            }
+        }
         [Authorize(Roles=("系主任"))]
         [HttpGet]
         public IActionResult Log()
