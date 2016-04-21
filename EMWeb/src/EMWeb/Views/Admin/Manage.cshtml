@@ -32,24 +32,36 @@
                 </table>
             </div>
             <div class="col-md-9">
-                <h2>@User.Current.UserName</h2>
+                @if (User.IsInRole("系主任"))
+                {
+                    <h2>欢迎系主任 @User.Current.UserName</h2>
+                }
+                else
+                {
+                    <h2>欢迎指导老师 @User.Current.UserName</h2>
+                }
                 <hr />
                 <table class="table">
                     <thead>
                         <tr>
                             <th>姓名</th>
+                            <td>@Model.Name</td>
                         </tr>
                         <tr>
                             <th>编号</th>
+                            <td>@Model.Number</td>
                         </tr>
                         <tr>
                             <th>专业</th>
+                            <td>@Model.Major.Title</td>
                         </tr>
                         <tr>
                             <th>学院</th>
+                            <td>@Model.College.Title</td>
                         </tr>
                         <tr>
                             <th>添加时间</th>
+                            <td>@Model.CreateTime</td>
                         </tr>
                     </thead>
                 </table>
@@ -187,11 +199,16 @@
     });
     $("#teacher-College").change(function(){
         var colleges=$("#teacher-College").val();
-        var url = "/Home/GetMajor";
-        var params={college:colleges};
-        $.get(url,params,function(html){
-            $("#major-list").html(html);
-        });
+        if (colleges == "请选择学院") {
+            alert("请选择正确的学院");
+        }
+        else {
+            var url = "/Home/GetMajor";
+            var params = { college: colleges };
+            $.get(url, params, function (html) {
+                $("#major-list").html(html);
+            });
+        }
     });
     $("#sendTeacher").click(function () {
         var college = $("#teacher-College").val();

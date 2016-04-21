@@ -121,11 +121,11 @@
             var url = "/Account/Login";
             var params = { username: username, password: password }
             $.post(url, params, function (data) {
-                if (data == "student") {
+                if (data == "学生") {
                     window.location.href = "/Home/Center";
                 }
-                else if (data == "teacher") {
-                    window.location.href = "/Home/Manage";
+                else  if(data=="老师") {
+                    window.location.href = "/Admin/Manage";
                }
                else {
                    alert("用户名或者密码错误");

@@ -1,4 +1,4 @@
-﻿@{
+﻿@{ 
     Layout = null;
 }
 <!DOCTYPE html>
@@ -26,7 +26,14 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" asp-action="Index" asp-controller="Home">EMWeb</a>
+                @if (User.IsInRole("学生"))
+                {
+                    <a class="navbar-brand" asp-action="Center" asp-controller="Home">EMWeb</a>
+                }
+                else
+                {
+                    <a class="navbar-brand" asp-action="Manage" asp-controller="Admin">EMWeb</a>
+                }
             </div>
 
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
@@ -34,6 +41,10 @@
                     <li><a asp-action="Subject" aps-controller="Home">选题 <span class="sr-only">(current)</span></a></li>
                     <li><a href="#">开题</a></li>
                     <li><a href="#">报告</a></li>
+                    @if (User.IsInRole("系主任"))
+                    {
+                        <li><a asp-action="Log" asp-controller="System">系统日志</a></li>
+                    }
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">毕业设计 <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
@@ -60,7 +71,7 @@
                             }
                             else
                             {
-                                <li><a asp-action="Manage" asp-controller="Home">个人中心</a></li>
+                                <li><a asp-action="Manage" asp-controller="Admin">个人中心</a></li>
 
                             }
                             <li><a asp-action="Modify" asp-controller="Account">修改密码</a></li>

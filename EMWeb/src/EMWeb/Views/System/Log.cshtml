@@ -1,0 +1,28 @@
+﻿@model IEnumerable<Log>
+<div class="container">
+    <h2>系统日志</h2>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>管理者ID</th>
+                <th>操作者身份</th>
+                <th>操作类型</th>
+                <th>操作时间</th>
+                <th>目标ID</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var x in Model)
+            {
+                <tr>
+                    <td>@x.UserId</td>
+                    <td>@x.Roles</td>
+                    <td>@x.Operation</td>
+                    <td>@x.Time</td>
+                    <td>@x.Number</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+

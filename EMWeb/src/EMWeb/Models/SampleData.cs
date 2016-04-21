@@ -36,8 +36,41 @@ namespace EMWeb.Models
                 await userManager.CreateAsync(guest, "Cream2015!@#");
                 await userManager.AddToRoleAsync(guest, "学生");
 
-                DB.Colleges.Add(new College { Title = "计算机与控制工程学院" });
+                var college = new College { Title = "计算机与控制工程学院" };
+                DB.Colleges.Add(college);
+                var major = new Major { CollegeId = college.Id, Title = "软件工程" };
+                DB.Majors.Add(major);
 
+                var teacherzhang = new Teacher
+                {   Name = "张老师",
+                    Number = 2012023110,
+                    CreateTime = DateTime.Now,
+                    UserId=headteacher.Id,
+                    CollegeId = college.Id,
+                    MajorId = major.Id
+                };
+                DB.Teachers.Add(teacherzhang);
+
+                var teacherfdd = new Teacher
+                {
+                    Name = "付东东",
+                    Number = 2012023005,
+                    CreateTime = DateTime.Now,
+                    UserId = teacher.Id,
+                    CollegeId = college.Id,
+                    MajorId = major.Id,
+                };
+                DB.Teachers.Add(teacherfdd);
+                var studentdu = new Student
+                {
+                    Name = "杜晨勇",
+                    Number = 2012023009,
+                    CreateTime = DateTime.Now,
+                    UserId = guest.Id,
+                    CollegeId = college.Id,
+                    MajorId = major.Id,
+                };
+                DB.Students.Add(studentdu);
             }
             DB.SaveChanges();
         }

@@ -15,6 +15,7 @@ namespace EMWeb.Models
         public DbSet<College> Colleges { get; set; }
         public DbSet<Major> Majors { get; set; }
         public DbSet<Subject> Subjects { get; set; }
+        public DbSet<Log> Logs { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -41,6 +42,10 @@ namespace EMWeb.Models
                 e.HasIndex(x => x.Id);
             });
             builder.Entity<Subject>(e =>
+            {
+                e.HasIndex(x => x.Id);
+            });
+            builder.Entity<Log>(e =>
             {
                 e.HasIndex(x => x.Id);
             });

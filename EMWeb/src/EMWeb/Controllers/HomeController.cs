@@ -83,19 +83,6 @@ namespace EMWeb.Controllers
                 return Content("error");
             }
         }
-        [AnyRoles("系主任,指导老师")]
-        [HttpGet]
-        public IActionResult Manage()
-        {
-            ViewBag.College = DB.Colleges
-                .OrderBy(x => x.Id)
-                .ToList();
-            var teacher = DB.Teachers
-                .Include(x=>x.Major)
-                .Include(x=>x.College)
-                .Where(x => x.UserId == User.Current.Id)
-                .SingleOrDefault();
-            return View(teacher);
-        }
+        
     }
 }
