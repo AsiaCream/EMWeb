@@ -100,11 +100,26 @@ namespace EMWeb.Controllers
             }
             
         }
+        [AnyRoles("系主任,指导老师")]
+        [HttpGet]
+        public IActionResult Manage()
+        {
+            ViewBag.College = DB.Colleges
+                .OrderBy(x => x.Id)
+                .ToList();
+            var teacher = DB.Teachers
+                .Include(x => x.Major)
+                .Include(x => x.College)
+                .Where(x => x.UserId == User.Current.Id)
+                .SingleOrDefault();
+            return View(teacher);
+        }
         [HttpPost]
         [AnyRoles("指导老师,系主任")]
         public IActionResult Pass(int id)
         {
             var subject = DB.Subjects
+                .Include(x=>x.Student)
                 .Where(x => x.Id == id)
                 .SingleOrDefault();
             if (subject == null)
@@ -113,12 +128,22 @@ namespace EMWeb.Controllers
             }
             else
             {
+                var log = new Log
+                {
+                    UserId = User.Current.Id,
+                    Roles = Roles.老师,
+                    Number = subject.Student.Number,
+                    Operation = Operation.审核题目通过,
+                    Time = DateTime.Now,
+                };
+                DB.Logs.Add(log);
                 var student = DB.Students
                     .Where(x => x.Id == subject.StudentId)
                     .SingleOrDefault();
                 student.State = State.锁定;
                 subject.Draw = Draw.通过;
                 subject.DrawTime = DateTime.Now;
+                DB.Subjects.Add(subject);
                 DB.SaveChanges();
                 return Content("success");
             }
