@@ -102,10 +102,37 @@ namespace EMWeb.Controllers
                 return Content("success");
             }
         }
+        [HttpPost]
+        public IActionResult DeleteCollege(int id)
+        {
+            var college = DB.Colleges
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            if (college == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            else
+            {
+                DB.Colleges.Remove(college);
+                var log = new Log
+                {
+                    UserId = User.Current.Id,
+                    Roles = Roles.系主任,
+                    Operation = Operation.删除学院,
+                    Time = DateTime.Now,
+                    Number = college.Id,
+                };
+                DB.Logs.Add(log);
+                DB.SaveChanges();
+                return Content("success");
+            }
+        }
         [HttpGet]
         public IActionResult Log()
         {
             var log = DB.Logs
+                .Where(x=>x.Roles==Roles.老师||x.Roles==Roles.系主任)
                 .OrderByDescending(x => x.Time)
                 .ToList();
             if (log.Count() != 0)
