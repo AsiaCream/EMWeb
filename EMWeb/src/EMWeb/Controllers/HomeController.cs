@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Authorization;
 using EMWeb.Models;
+using EMWeb.ViewModels;
 using Microsoft.Data.Entity;
 
 namespace EMWeb.Controllers
@@ -39,6 +40,42 @@ namespace EMWeb.Controllers
                     .ToList();
                 return View(subjects);
             }
+        }
+        [HttpGet]
+        [Authorize(Roles =("学生"))]
+        public IActionResult MySubjectLog()
+        {
+            var logs = DB.Logs
+                .Where(x => x.Roles == Roles.学生)
+                .Where(x => x.UserId == User.Current.Id)
+                .ToList();
+            var student = DB.Students
+                .Where(x => x.UserId == User.Current.Id)
+                .SingleOrDefault();
+            var subject = DB.Subjects
+                .Where(x => x.StudentId == student.Id)
+                .ToList();
+            if (logs.Count != 0&&subject.Count()!=0)
+            {
+                var ret = new List<MySubjectLog>();
+                foreach (var x in logs)
+                {
+                    ret.Add(new MySubjectLog
+                    {
+                        Id = x.Id,
+                        SNumber = x.Number,
+                        STitle = DB.Subjects.Where(y => y.Id == x.Number).SingleOrDefault().Title,
+                        Teacher = DB.Teachers.Where(y => y.Id == (DB.Subjects.Where(z => z.Id == x.Number).SingleOrDefault().TeacherId)).SingleOrDefault().Name,
+                        Time = x.Time,
+                    });
+                };
+                return PagedView(logs, 20);
+            }
+            else
+            {
+                return RedirectToAction("Error", "System");
+            }
+            
         }
         [Authorize(Roles =("学生"))]
         [HttpGet]
