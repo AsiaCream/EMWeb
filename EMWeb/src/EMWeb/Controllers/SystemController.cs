@@ -11,10 +11,10 @@ using EMWeb.ViewModels;
 
 namespace EMWeb.Controllers
 {
+    [Authorize(Roles=("系主任"))]
     public class SystemController : BaseController
     {
         //添加专业
-        [Authorize(Roles =("系主任"))]
         [HttpPost]
        public IActionResult CreateMajor(Major major,string college)
         {
@@ -35,7 +35,6 @@ namespace EMWeb.Controllers
             DB.SaveChanges();
             return Content("success");
         }
-        [Authorize(Roles =("系主任"))]
         [HttpPost]
         public IActionResult CreateCollege(College college)
         {
@@ -62,7 +61,47 @@ namespace EMWeb.Controllers
                 return Content("success");
             }
         }
-        [Authorize(Roles=("系主任"))]
+        [HttpGet]
+        public IActionResult EditCollege(int id)
+        {
+            var college = DB.Colleges
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            if (college == null)
+            {
+                return Content("error");
+            }
+            else
+            {
+                return View(college);
+            }
+        }
+        [HttpPost]
+        public IActionResult EditCollege(int id,College college)
+        {
+            var oldcollege = DB.Colleges
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            if (oldcollege == null)
+            {
+                return Content("error");
+            }
+            else
+            {
+                oldcollege.Title = college.Title;
+                var log = new Log
+                {
+                    UserId = User.Current.Id,
+                    Roles = Roles.系主任,
+                    Operation = Operation.编辑学院,
+                    Time = DateTime.Now,
+                    Number = college.Id,
+                };
+                DB.Logs.Add(log);
+                DB.SaveChanges();
+                return Content("success");
+            }
+        }
         [HttpGet]
         public IActionResult Log()
         {
