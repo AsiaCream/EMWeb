@@ -65,15 +65,25 @@
                 <h4 class="modal-title">添加毕业设计选题</h4>
             </div>
             <div class="modal-body">
-                <form>
-                    <select name="subjectTeacher" id="subjectTeacher" class="form-control">
-                        @foreach(Teacher x in ViewBag.Teacher)
-                        {
-                            <option>@x.Name</option>
-                        }
-                    </select><br />
+                @if (ViewBag.SubjectTeacher == null)
+                {
+                    <form>
+                        <select name="subjectTeacher" id="subjectTeacher" class="form-control">
+                            @foreach (Teacher x in ViewBag.Teacher)
+                            {
+                                <option>@x.Name</option>
+                            }
+                        </select><br />
+                        <input type="text" name="subjectTitle" id="subjectTitle" class="form-control" placeholder="请填写毕业设计题目" />
+                    </form>
+                }
+                else
+                {
+                    <p>您当前选择的导师为:</p>
+                    <input type="text" name="subjectTeacher" id="subjectTeacher" class="form-control" value="@ViewBag.SubjectTeacher.Name" disabled="disabled"/><br />
                     <input type="text" name="subjectTitle" id="subjectTitle" class="form-control" placeholder="请填写毕业设计题目" />
-                </form>
+                }
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
@@ -99,6 +109,7 @@
             $.post(url, params, function (data) {
                 if (data == "success") {
                     alert("添加选题成功");
+                    document.getElementById("subjectTitle").value = "";
                 }
                 else if (date == "锁定") {
                     alert("您题目已经审核通过，无法再提交题目")
