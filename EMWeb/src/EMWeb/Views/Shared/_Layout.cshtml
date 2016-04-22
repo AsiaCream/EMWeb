@@ -41,6 +41,10 @@
                     <li><a asp-action="Subject" aps-controller="Home">选题 <span class="sr-only">(current)</span></a></li>
                     <li><a href="#">开题</a></li>
                     <li><a href="#">报告</a></li>
+                    @if (User.IsInRole("学生"))
+                    {
+                        <li><a asp-action="MySubjectLog" asp-controller="Home">日志</a></li>
+                    }
                     @if (User.IsInRole("系主任"))
                     {
                         <li><a asp-action="Log" asp-controller="System">系统日志</a></li>
@@ -100,6 +104,7 @@
     <script src="~/scripts/jquery-2.1.1.js"></script>
     <script src="~/scripts/bootstrap.min.js"></script>
     <script src="~/scripts/custom.js"></script>
+    <script src="~/scripts/codecomb.cascade.js"></script>
 </body>
 </html>
 
