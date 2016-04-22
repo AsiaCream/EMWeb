@@ -2,7 +2,7 @@
 @{
     Layout = null;
 }
-<select name="major" id="major" class="form-control">
+<select name="major" id="major" class="form-control" data-parent-select="major-college">
     @foreach (var x in Model)
     {
         <option>@x.Title</option>
