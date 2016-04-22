@@ -94,7 +94,7 @@
                         <input type="password" name="password" placeholder="密码" id="password" class="form-control" /><br />
                         <input type="password" name="confirmpwd" placeholder="确认密码" id="confirmpwd" class="form-control" /><br />
                         <select class="form-control" name="college" id="college">
-                            <option>请选择您的学院</option>
+                            <option id="bug">请选择您的学院</option>
                             @foreach(College x in ViewBag.College)
                             {
                                 <option>@x.Title</option>
@@ -167,10 +167,16 @@
     $("#college").change(function () {
         var college = $("#college").val();
         var url = "/Home/GetMajor";
-        var params = { college: college };
-        $.get(url, params, function (html) {
-        $("#major-html").html(html);
-        });
+        if (college == "请选择您的学院") {
+            alert("请选择您的学院");
+        }
+        else {
+            $("#bug").remove();
+            var params = { college: college };
+            $.get(url, params, function (html) {
+                $("#major-html").html(html);
+            });
+        }
     });
 </script>
 
