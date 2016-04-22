@@ -22,7 +22,9 @@ namespace EMWeb.Controllers
             var result = await SignInManager.PasswordSignInAsync(username, password, false, false);
             if (result.Succeeded)
             {
-                if (User.AnyRoles("学生"))
+                var user = await UserManager.FindByNameAsync(username);
+
+                if (await UserManager.IsInRoleAsync(user, "学生"))
                 {
                     return Content("学生");
                 }
