@@ -51,13 +51,27 @@ namespace EMWeb.Controllers
                 .SingleOrDefault();
             if (student != null)
             {
-                var teacher = DB.Teachers
+                var subject = DB.Subjects
+                    .Where(x => x.StudentId == student.Id)
+                    .ToList();
+                if (subject.Count()==0)
+                {
+                    var teacher = DB.Teachers
                     .Where(x => x.MajorId == student.MajorId)
                     .OrderByDescending(x => x.CreateTime)
                     .ToList();
-                ViewBag.Teacher = teacher;
-
-                return View(student);
+                    ViewBag.Teacher = teacher;
+                    return View(student);
+                }
+                else
+                {
+                    var teacherid= subject.OrderBy(x => x.Id).First().TeacherId;
+                    ViewBag.SubjectTeacher = DB.Teachers
+                        .Where(x => x.Id == teacherid)
+                        .SingleOrDefault();
+                    return View(student);
+                }
+                
             }
             else
             {
@@ -82,6 +96,23 @@ namespace EMWeb.Controllers
             {
                 return Content("error");
             }
+        }
+        [Authorize(Roles =("系主任"))]
+        [HttpGet]
+        public IActionResult AdminGetCollege()
+        {
+            var college = DB.Colleges
+                .OrderByDescending(x => x.Id)
+                .ToList();
+            return View(college);
+        }
+        [HttpGet]
+        public IActionResult AdminGetNextCollege()
+        {
+            var college = DB.Colleges
+                .OrderByDescending(x => x.Id)
+                .ToList();
+            return View(college);
         }
         
     }
