@@ -12,11 +12,6 @@ namespace EMWeb.Controllers
 {
     public class AdminController : BaseController
     {
-        [HttpGet]
-        public IActionResult CreateSubject()
-        {
-            return View();
-        }
         [Authorize(Roles ="学生")]
         [HttpPost]
         public IActionResult CreateSubject(Subject subject,string teacher)
@@ -49,10 +44,19 @@ namespace EMWeb.Controllers
                         .Where(x => x.Name == teacher)
                         .SingleOrDefault();
                         DB.Subjects.Add(subject);
-                        subject.PostTime = DateTime.Now;
                         subject.Draw = Draw.待审核;
                         subject.StudentId = student.Id;
                         subject.TeacherId = tea.Id;
+                        subject.PostTime = DateTime.Now;
+                        var log = new Log
+                        {
+                            Time = DateTime.Now,
+                            Roles = Roles.学生,
+                            Operation = Operation.添加毕业设计选题,
+                            UserId = User.Current.Id,
+                            Number = subject.Id,
+                        };
+                        DB.Logs.Add(log);
                         DB.SaveChanges();
                         return Content("success");
                     }
@@ -143,7 +147,6 @@ namespace EMWeb.Controllers
                 student.State = State.锁定;
                 subject.Draw = Draw.通过;
                 subject.DrawTime = DateTime.Now;
-                DB.Subjects.Add(subject);
                 DB.SaveChanges();
                 return Content("success");
             }
