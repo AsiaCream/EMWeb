@@ -1,0 +1,11 @@
+﻿@model IEnumerable<College>
+@{ 
+    Layout = null;
+}
+<select class="form-control" name="college" id="major-College">
+    <option>请选择学院</option>
+    @foreach (var x in Model)
+    {
+        <option value="@x.Title">@x.Title</option>
+    }
+</select><br />
