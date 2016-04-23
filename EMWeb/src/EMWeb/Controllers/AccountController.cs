@@ -136,7 +136,7 @@ namespace EMWeb.Controllers
                         Roles = Roles.系主任,
                         Operation = Operation.添加系主任,
                         Time = DateTime.Now,
-                        Number = teacher.Number,
+                        Number = teacher.Id,
                     };
                     DB.Logs.Add(log);
                     DB.Teachers.Add(teacher);
@@ -156,6 +156,16 @@ namespace EMWeb.Controllers
                         CreateTime = DateTime.Now,
                     };
                     DB.Teachers.Add(teacher);
+                    DB.SaveChanges();
+                    var log = new Log
+                    {
+                        UserId = User.Current.Id,
+                        Roles = Roles.系主任,
+                        Operation = Operation.添加老师,
+                        Time = DateTime.Now,
+                        Number = teacher.Id,
+                    };
+                    DB.Logs.Add(log);
                     DB.SaveChanges();
                     return Content("success");
                 }
