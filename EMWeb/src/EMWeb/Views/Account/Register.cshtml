@@ -91,7 +91,7 @@
                         <input type="text" name="name" placeholder="姓名" id="name" class="form-control" /><br />
                         <input type="text" name="number" placeholder="学号" id="number" class="form-control" /><br />
                         <input type="text" name="username" placeholder="用户名" id="username" class="form-control" /><br />
-                        <input type="password" name="password" placeholder="密码" id="password" class="form-control" /><br />
+                        <input type="password" name="password" placeholder="密码为数字，字母大小写，特殊字符组成" id="password" class="form-control" /><br />
                         <input type="password" name="confirmpwd" placeholder="确认密码" id="confirmpwd" class="form-control" /><br />
                         <select class="form-control" name="college" id="college">
                             <option id="bug">请选择您的学院</option>
@@ -164,6 +164,8 @@
             });
         }
     });
+
+
     $("#college").change(function () {
         var college = $("#college").val();
         var url = "/Home/GetMajor";

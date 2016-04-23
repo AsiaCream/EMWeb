@@ -6,6 +6,7 @@
 
   "dependencies": {
     "CodeComb.AspNet.Extensions": "2.0.0-rc1-final",
+    "CodeComb.AspNet.Upload": "2.0.0-rc1-final-2",
     "EntityFramework.Sqlite": "7.0.0-rc1-final",
     "Microsoft.AspNet.Authorization": "1.0.0-rc1-final",
     "Microsoft.AspNet.Identity": "3.0.0-rc1-final",

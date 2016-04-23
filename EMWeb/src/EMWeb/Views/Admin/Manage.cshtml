@@ -5,7 +5,7 @@
             <div class="col-md-3">
                 <div class="caption">
                     <div class="thumbnail">
-                        <img src="~/images/person.png" />
+                        <a href="#"><img src="~/images/person.png" /></a>
                     </div>
                 </div>
                 <table class="table">
@@ -13,25 +13,25 @@
                         @if (User.IsInRole("系主任"))
                         {
                             <tr>
-                                <td><a class="btn btn-primary" id="addCollege">添加学院</a></td>
+                                <td><a class="btn btn-primary form-control" id="addCollege">添加学院名称</a></td>
                             </tr>
                             <tr>
-                                <td><a class="btn btn-primary" id="addMajor">添加专业</a></td>
+                                <td><a class="btn btn-primary form-control" id="addMajor">添加专业名称</a></td>
                             </tr>
                             <tr>
-                                <td><a class="btn btn-primary" id="addTeacher">添加指导老师</a></td>
+                                <td><a class="btn btn-primary form-control" id="addTeacher">添加指导老师</a></td>
                             </tr>
                         }
                         <tr>
-                            <td><a class="btn btn-primary" asp-action="Subject" asp-controller="Admin">查看选题情况</a></td>
+                            <td><a class="btn btn-primary form-control" asp-action="Subject" asp-controller="Admin">查看选题情况</a></td>
                         </tr>
                         <tr>
-                            <td><a class="btn btn-primary">查看毕设文档</a></td>
+                            <td><a class="btn btn-primary form-control">查看毕设文档</a></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-8 col-md-offset-1">
                 @if (User.IsInRole("系主任"))
                 {
                     <h2>欢迎系主任 @User.Current.UserName</h2>
@@ -69,12 +69,12 @@
         </div>
     </div>
 </div>
-<div class="modal" id="createCollege">
+<div class="modal fade" id="createCollege">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">添加学院</h4>
+                <h4 class="modal-title">添加学院名称</h4>
             </div>
             <div class="modal-body">
                 <form>
@@ -88,12 +88,12 @@
         </div>
     </div>
 </div>
-<div class="modal" id="createMajor">
+<div class="modal fade" id="createMajor">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">添加专业</h4>
+                <h4 class="modal-title">添加专业名称</h4>
             </div>
             <div class="modal-body">
                 <form>
@@ -108,7 +108,7 @@
         </div>
     </div>
 </div>
-<div class="modal" id="createTeacher">
+<div class="modal fade" id="createTeacher">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -189,8 +189,11 @@
                     alert("添加成功");
                     document.getElementById("majortitle").value = "";
                 }
+                else if(data=="error"){
+                    alert("添加失败，"+title+"已经存在");
+                }
                 else {
-                    alert("添加失败");
+                    alert("未知错误");
                 }
             });
         }
@@ -254,5 +257,5 @@
                 }
             });
         }
-        });
+    });
 </script>

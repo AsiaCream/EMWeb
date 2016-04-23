@@ -71,7 +71,7 @@ namespace EMWeb.Models
                     MajorId = major.Id,
                 };
                 DB.Students.Add(studentdu);
-
+                DB.SaveChanges();
                 var log1 = new Log {
                     Roles = Roles.系主任,
                     Operation = Operation.添加系主任,

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<MajorStudent>
 <div class="container">
     <h2 style="margin:0;padding:0;" class="text-center">当前毕业设计选择情况</h2>
-    <table class="table table-hover">
+    <table class="table table-hover table-striped">
         <thead>
             <tr>
                 <th>题目</th>
@@ -14,7 +14,7 @@
                 <th>操作</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="subject-list">
             @foreach (var x in Model)
             {
                 <tr id="table-tr-@x.Id">
@@ -33,6 +33,7 @@
             }
         </tbody>
     </table>
+    @Html.MakePager("pager-item","","pager")
 </div>
 <script type="text/javascript">
     function pass(id) {

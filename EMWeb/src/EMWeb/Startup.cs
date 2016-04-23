@@ -29,6 +29,8 @@ namespace EMWeb
                 .AddDefaultTokenProviders();
             services.AddMvc();
             services.AddSmartUser<User,string>();
+
+            
         }
 
         public async void Configure(IApplicationBuilder app,ILoggerFactory loggerFactory)

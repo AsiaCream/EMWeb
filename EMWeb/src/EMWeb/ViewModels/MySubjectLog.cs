@@ -12,5 +12,7 @@ namespace EMWeb.ViewModels
         public int SNumber { get; set; }
         public string STitle { get; set; }
         public string Teacher { get; set; }
+        public DateTime DrawTime { get; set; }
+        public string Draw { get; set; }
     }
 }

@@ -17,6 +17,11 @@ namespace EMWeb.Controllers
             return View();
         }
         [HttpGet]
+        public IActionResult LogError()
+        {
+            return View();
+        }
+        [HttpGet]
         [Authorize(Roles =("学生"))]
         public IActionResult Subject()
         {
@@ -78,7 +83,7 @@ namespace EMWeb.Controllers
             }
             else
             {
-                return RedirectToAction("Error", "System");
+                return RedirectToAction("LogError", "Home");
             }
             
         }
