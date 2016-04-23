@@ -21,19 +21,31 @@ namespace EMWeb.Controllers
             var cid = DB.Colleges
                 .Where(x => x.Title == college)
                 .Single();
-            DB.Majors.Add(major);
-            var log = new Log
+            var oldmajor = DB.Majors
+                .Where(x => x.Title == major.Title)
+                .SingleOrDefault();
+            if (oldmajor != null)
             {
-                UserId = User.Current.Id,
-                Roles = Roles.系主任,
-                Operation = Operation.添加专业,
-                Time = DateTime.Now,
-                Number = major.Id,
-            };
-            DB.Logs.Add(log);
-            major.CollegeId = cid.Id;
-            DB.SaveChanges();
-            return Content("success");
+                return Content("error");
+            }
+            else
+            {
+                DB.Majors.Add(major);
+                major.CollegeId = cid.Id;
+                DB.SaveChanges();
+                var log = new Log
+                {
+                    UserId = User.Current.Id,
+                    Roles = Roles.系主任,
+                    Operation = Operation.添加专业,
+                    Time = DateTime.Now,
+                    Number = major.Id,
+                };
+                DB.Logs.Add(log);
+                DB.SaveChanges();
+                return Content("success");
+            }
+            
         }
         [HttpPost]
         public IActionResult CreateCollege(College college)
@@ -48,6 +60,7 @@ namespace EMWeb.Controllers
             else
             {
                 DB.Colleges.Add(college);
+                DB.SaveChanges();
                 var log = new Log
                 {
                     Roles = Roles.系主任,
@@ -152,7 +165,7 @@ namespace EMWeb.Controllers
                     });
                 };
 
-                return View(ret);
+                return PagedView(ret,50);
             }
             else
             {
