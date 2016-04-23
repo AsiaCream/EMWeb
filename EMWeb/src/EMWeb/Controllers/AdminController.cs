@@ -28,26 +28,28 @@ namespace EMWeb.Controllers
             }
             else
             {
-                if (student.State == State.锁定)
+                if (sub != null)
                 {
-                    return Content("锁定");
+                    return Content("重复添加");
                 }
                 else
                 {
-                    if (sub != null)
+                    if (student.State == State.锁定)
                     {
-                        return Content("重复添加");
+                        return Content("锁定");
                     }
+
                     else
                     {
                         var tea = DB.Teachers
                         .Where(x => x.Name == teacher)
                         .SingleOrDefault();
-                        DB.Subjects.Add(subject);
                         subject.Draw = Draw.待审核;
                         subject.StudentId = student.Id;
                         subject.TeacherId = tea.Id;
                         subject.PostTime = DateTime.Now;
+                        DB.Subjects.Add(subject);
+                        DB.SaveChanges();
                         var log = new Log
                         {
                             Time = DateTime.Now,
@@ -132,21 +134,40 @@ namespace EMWeb.Controllers
             }
             else
             {
-                var log = new Log
-                {
-                    UserId = User.Current.Id,
-                    Roles = Roles.老师,
-                    Number = subject.Student.Number,
-                    Operation = Operation.审核题目通过,
-                    Time = DateTime.Now,
-                };
-                DB.Logs.Add(log);
                 var student = DB.Students
                     .Where(x => x.Id == subject.StudentId)
                     .SingleOrDefault();
                 student.State = State.锁定;
                 subject.Draw = Draw.通过;
                 subject.DrawTime = DateTime.Now;
+                DB.SaveChanges();
+                var ordersub = DB.Subjects
+                    .Where(x => x.StudentId == student.Id)
+                    .Where(x => x.Id != subject.Id)
+                    .Where(x=>x.Draw==Draw.待审核)
+                    .ToList();
+                foreach(var x in ordersub)
+                {
+                    x.Draw = Draw.未通过;
+                    x.DrawTime = DateTime.Now;
+                    DB.Logs.Add(new Log
+                    {
+                        Roles = Roles.老师,
+                        Operation = Operation.审核题目未通过,
+                        Time = DateTime.Now,
+                        UserId = User.Current.Id,
+                        Number = x.Id,
+                    });
+                }
+                var log = new Log
+                {
+                    UserId = User.Current.Id,
+                    Roles = Roles.老师,
+                    Number = subject.Id,
+                    Operation = Operation.审核题目通过,
+                    Time = DateTime.Now,
+                };
+                DB.Logs.Add(log);
                 DB.SaveChanges();
                 return Content("success");
             }
@@ -166,6 +187,15 @@ namespace EMWeb.Controllers
             {
                 subject.Draw = Draw.未通过;
                 subject.DrawTime = DateTime.Now;
+                var log = new Log
+                {
+                    Roles = Roles.老师,
+                    Operation = Operation.审核题目未通过,
+                    Time = DateTime.Now,
+                    Number = subject.Id,
+                    UserId = User.Current.Id,
+                };
+                DB.Logs.Add(log);
                 DB.SaveChanges();
                 return Content("success");
             }
