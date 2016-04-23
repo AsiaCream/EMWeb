@@ -47,6 +47,23 @@ namespace EMWeb.Controllers
             }
             
         }
+        [HttpGet]
+        public IActionResult AllCollege()
+        {
+            var college = DB.Colleges
+                .OrderByDescending(x => x.Id)
+                .ToList();
+
+            return View(college);
+        }
+        [HttpGet]
+        public IActionResult NewAllCollege()
+        {
+            var college = DB.Colleges
+                .OrderByDescending(x => x.Id)
+                .ToList();
+            return View(college);
+        }
         [HttpPost]
         public IActionResult CreateCollege(College college)
         {
@@ -82,7 +99,7 @@ namespace EMWeb.Controllers
                 .SingleOrDefault();
             if (college == null)
             {
-                return Content("error");
+                return RedirectToAction("Error", "Home");
             }
             else
             {
@@ -173,5 +190,6 @@ namespace EMWeb.Controllers
             }
             
         }
+        
     }
 }
