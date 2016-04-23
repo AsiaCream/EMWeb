@@ -49,13 +49,16 @@ namespace EMWeb.Controllers
                 .Where(x => x.Roles == Roles.学生)
                 .Where(x => x.UserId == User.Current.Id)
                 .ToList();
+
             var student = DB.Students
                 .Where(x => x.UserId == User.Current.Id)
                 .SingleOrDefault();
+
             var subject = DB.Subjects
                 .Where(x => x.StudentId == student.Id)
                 .ToList();
-            if (logs.Count != 0&&subject.Count()!=0)
+
+            if (logs.Count() != 0&&subject.Count()!=0)
             {
                 var ret = new List<MySubjectLog>();
                 foreach (var x in logs)
@@ -66,10 +69,12 @@ namespace EMWeb.Controllers
                         SNumber = x.Number,
                         STitle = DB.Subjects.Where(y => y.Id == x.Number).SingleOrDefault().Title,
                         Teacher = DB.Teachers.Where(y => y.Id == (DB.Subjects.Where(z => z.Id == x.Number).SingleOrDefault().TeacherId)).SingleOrDefault().Name,
-                        Time = x.Time,
+                        Time = DB.Subjects.Where(y => y.Id == x.Number).SingleOrDefault().PostTime,
+                        DrawTime = DB.Subjects.Where(y => y.Id == x.Number).SingleOrDefault().DrawTime,
+                        Draw=DB.Subjects.Where(y=>y.Id==x.Number).SingleOrDefault().Draw.ToString(),
                     });
                 };
-                return PagedView(logs, 20);
+                return PagedView(ret, 20);
             }
             else
             {
