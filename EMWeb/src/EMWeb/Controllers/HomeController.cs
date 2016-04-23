@@ -22,6 +22,11 @@ namespace EMWeb.Controllers
             return View();
         }
         [HttpGet]
+        public IActionResult Error()
+        {
+            return View();
+        }
+        [HttpGet]
         [Authorize(Roles =("学生"))]
         public IActionResult Subject()
         {
@@ -160,6 +165,21 @@ namespace EMWeb.Controllers
                 .OrderByDescending(x => x.Id)
                 .ToList();
             return View(college);
+        }
+        [HttpGet]
+        public IActionResult EditGetCollege(int id)
+        {
+            var college = DB.Colleges
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            if (college == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            else
+            {
+                return View(college);
+            }
         }
         
     }
