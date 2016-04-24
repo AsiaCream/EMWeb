@@ -1,0 +1,92 @@
+﻿@model IEnumerable<CollegeMajor>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>专业ID</th>
+                        <th>专业名</th>
+                        <th>对应学院ID</th>
+                        <th>对应学院名</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody id="new-major-list">
+                    @foreach (var x in Model)
+                    {
+                        <tr id="tr-@x.MajorNumber">
+                            <td>@x.MajorNumber</td>
+                            <td>@x.MajorName</td>
+                            <td>@x.CollegeNumber</td>
+                            <td>@x.CollegeName</td>
+                            <td><a href="javascript:void(0)" onclick="edit(@x.MajorNumber)" class="btn btn-sm btn-success">编辑</a><a href="javascript:void(0)" onclick="remove(@x.MajorNumber)" class="btn btn-sm btn-danger">删除</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.MakePager("page-item","","pager")
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="EditMajor">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">修改专业名</h4>
+            </div>
+            <div class="modal-body">
+                <div id="major">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
+                <button type="button" id="send" class="btn btn-success">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="~/scripts/jquery-2.1.1.js"></script>
+<script type="text/javascript">
+    function edit(id) {
+        $("#EditMajor").modal("show");
+        $.get("/Home/EditGetMajor", { id: id }, function (html) {
+            $("#major").html(html);
+        });
+    }
+    $("#send").click(function () {
+        var id = $("#majorid").val();
+        var title = $("#majortitle").val();
+        $.post("/System/EditMajor", { id: id, title: title }, function (data) {
+            if (data == "success") {
+                alert("修改成功");
+                $("#EditMajor").modal("hide");
+                $.get("/System/NewAllMajor", function (html) {
+                    $("#new-major-list").html(html);
+                });
+            }
+            else {
+                alert("未知错误");
+            }
+        });
+
+    });
+
+    function remove(id){
+        var jug=confirm("确定删除吗？");
+        if(jug==true){
+            $.post("/System/DeleteMajor",{id:id},function(data){
+                if(data=="success"){
+                    $("#tr-" + id).remove();
+                    alert("删除成功");
+                }
+                else{
+                    alert("删除失败");
+                }
+            });
+        }
+
+    }
+</script>
+
