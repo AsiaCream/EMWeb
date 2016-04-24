@@ -181,6 +181,21 @@ namespace EMWeb.Controllers
                 return View(college);
             }
         }
+        [HttpGet]
+        public IActionResult EditGetMajor(int id)
+        {
+            var major = DB.Majors
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            if (major == null)
+            {
+                return RedirectToAction("Error", "Homw");
+            }
+            else
+            {
+                return View(major);
+            }
+        }
         
     }
 }
