@@ -14,7 +14,6 @@ namespace EMWeb.Controllers
     [Authorize(Roles=("系主任"))]
     public class SystemController : BaseController
     {
-        //添加专业
         [HttpPost]
        public IActionResult CreateMajor(Major major,string college)
         {
@@ -125,7 +124,7 @@ namespace EMWeb.Controllers
                     Roles = Roles.系主任,
                     Operation = Operation.编辑学院,
                     Time = DateTime.Now,
-                    Number = college.Id,
+                    Number = oldcollege.Id,
                 };
                 DB.Logs.Add(log);
                 DB.SaveChanges();
@@ -189,6 +188,112 @@ namespace EMWeb.Controllers
                 return RedirectToAction("Error", "Home");
             }
             
+        }
+        [HttpGet]
+        public IActionResult AllMajor()
+        {
+            var major = DB.Majors
+                .Include(x=>x.College)
+                .OrderByDescending(x => x.Id)
+                .ToList();
+            var ret = new List<CollegeMajor>();
+            foreach(var x in major)
+            {
+                ret.Add(new CollegeMajor
+                {
+                    CollegeNumber = x.College.Id,
+                    CollegeName = x.College.Title,
+                    MajorNumber = x.Id,
+                    MajorName=x.Title,
+                });
+            }
+            return PagedView(ret,50);
+        }
+        [HttpGet]
+        public IActionResult NewAllMajor()
+        {
+            var major = DB.Majors
+                .Include(x => x.College)
+                .OrderByDescending(x => x.Id)
+                .ToList();
+            var ret = new List<CollegeMajor>();
+            foreach (var x in major)
+            {
+                ret.Add(new CollegeMajor
+                {
+                    CollegeNumber = x.College.Id,
+                    CollegeName = x.College.Title,
+                    MajorNumber = x.Id,
+                    MajorName = x.Title,
+                });
+            }
+            return View(ret);
+        }
+        [HttpGet]
+        public IActionResult EditMajor(int id)
+        {
+            var major = DB.Majors
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            if (major == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            else
+            {
+                return View(major);
+            }
+        }
+        [HttpPost]
+        public IActionResult EditMajor(int id,Major major)
+        {
+            var oldmajor = DB.Majors
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            if (oldmajor == null)
+            {
+                return RedirectToAction("Error","Home");
+            }
+            else
+            {
+                oldmajor.Title = major.Title;
+                var log = new Log
+                {
+                    UserId = User.Current.Id,
+                    Roles = Roles.系主任,
+                    Operation = Operation.编辑专业,
+                    Time = DateTime.Now,
+                    Number = oldmajor.Id,
+                };
+                DB.Logs.Add(log);
+                DB.SaveChanges();
+                return Content("success");
+            }
+        }
+        [HttpPost]
+        public IActionResult DeleteMajor(int id)
+        {
+            var major = DB.Majors
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            if (major == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            else
+            {
+                DB.Majors.Remove(major);
+                var log = DB.Logs.Add(new Log
+                {
+                    Roles = Roles.系主任,
+                    Operation = Operation.删除专业,
+                    Number = major.Id,
+                    Time = DateTime.Now,
+                    UserId = User.Current.Id,
+                });
+                DB.SaveChanges();
+                return Content("success");
+            }
         }
         
     }
