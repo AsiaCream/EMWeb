@@ -73,6 +73,7 @@
             $.post("/System/DeleteCollege",{id:id},function(data){
                 if(data=="success"){
                     $("#tr-"+id).remove();
+                    alert("删除成功");
                 }
                 else{
                     alert("删除失败");

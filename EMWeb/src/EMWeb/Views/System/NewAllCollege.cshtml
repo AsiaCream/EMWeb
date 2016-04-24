@@ -8,10 +8,10 @@
                 <tbody id="new-college-list">
                     @foreach (var x in Model)
                     {
-                        <tr>
+                        <tr id="tr-@x.Id">
                             <td>@x.Id</td>
                             <td>@x.Title</td>
-                            <td><a href="javascript:edit(@x.Id)" class="btn btn-sm btn-primary">编辑</a><a href="#" class="btn btn-sm btn-danger">删除</a></td>
+                            <td><a href="javascript:edit(@x.Id)" class="btn btn-sm btn-success">编辑</a><a href="javascript:void(0)" onclick="remove(@x.Id)" class="btn btn-sm btn-danger">删除</a></td>
                         </tr>
                     }
                 </tbody>
