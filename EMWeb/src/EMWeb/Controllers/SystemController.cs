@@ -161,7 +161,7 @@ namespace EMWeb.Controllers
         public IActionResult Log()
         {
             var log = DB.Logs
-                .Where(x=>x.Roles==Roles.老师||x.Roles==Roles.系主任)
+                .Where(x=>x.Roles==Roles.系主任)
                 .OrderByDescending(x => x.Time)
                 .ToList();
             if (log.Count() != 0)
@@ -188,6 +188,68 @@ namespace EMWeb.Controllers
                 return RedirectToAction("Error", "Home");
             }
             
+        }
+        [HttpGet]
+        public IActionResult TeacherLog()
+        {
+            var log = DB.Logs
+                .Where(x => x.Roles == Roles.老师)
+                .OrderByDescending(x => x.Time)
+                .ToList();
+            if (log.Count() != 0)
+            {
+                var ret = new List<SystemLog>();
+                foreach (var x in log)
+                {
+                    ret.Add(new SystemLog
+                    {
+                        Id = x.Id,
+                        AdminNumber = DB.Teachers.Where(y => y.UserId == x.UserId).SingleOrDefault().Number,
+                        AdminName = DB.Teachers.Where(y => y.UserId == x.UserId).SingleOrDefault().Name,
+                        Role = x.Roles.ToString(),
+                        Operation = x.Operation.ToString(),
+                        Time = x.Time,
+                        TargetNumber = x.Number,
+                    });
+                };
+
+                return PagedView(ret, 50);
+            }
+            else
+            {
+                return RedirectToAction("Error", "Home");
+            }
+        }
+        [HttpGet]
+        public IActionResult StudentLog()
+        {
+            var log = DB.Logs
+                .Where(x => x.Roles == Roles.学生)
+                .OrderByDescending(x => x.Time)
+                .ToList();
+            if (log.Count() != 0)
+            {
+                var ret = new List<SystemLog>();
+                foreach (var x in log)
+                {
+                    ret.Add(new SystemLog
+                    {
+                        Id = x.Id,
+                        AdminNumber = DB.Students.Where(y => y.UserId == x.UserId).SingleOrDefault().Number,
+                        AdminName = DB.Students.Where(y => y.UserId == x.UserId).SingleOrDefault().Name,
+                        Role = x.Roles.ToString(),
+                        Operation = x.Operation.ToString(),
+                        Time = x.Time,
+                        TargetNumber = x.Number,
+                    });
+                };
+
+                return PagedView(ret, 50);
+            }
+            else
+            {
+                return RedirectToAction("Error", "Home");
+            }
         }
         [HttpGet]
         public IActionResult AllMajor()
