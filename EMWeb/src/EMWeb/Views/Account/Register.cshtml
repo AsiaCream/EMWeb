@@ -158,8 +158,11 @@
                 else if (data == "error") {
                     alert("用户名" + username + "已经存在");
                 }
+                else if (data == "password") {
+                    alert("请检查密码是否为数字，特殊字符，字母大小写组成，例子：Abcd1234!@@#");
+                }
                 else {
-                    alert("格式错误");
+                    alert("未知错误");
                 }
             });
         }

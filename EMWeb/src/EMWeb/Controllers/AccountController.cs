@@ -70,21 +70,29 @@ namespace EMWeb.Controllers
                 {
                     UserName = username,
                 };
-                await UserManager.CreateAsync(user, password);
-                await UserManager.AddToRoleAsync(user, "学生");
-                var student = new Student
+                var result = await UserManager.CreateAsync(user, password);
+                if (result.Succeeded)
                 {
-                    Name = name,
-                    Number = number,
-                    UserId = user.Id,
-                    CollegeId = col.Id,
-                    MajorId = maj.Id,
-                    CreateTime = DateTime.Now,
-                    State=State.未锁定,
-                };
-                DB.Students.Add(student);
-                DB.SaveChanges();
-                return Content("success");
+                    await UserManager.AddToRoleAsync(user, "学生");
+                    var student = new Student
+                    {
+                        Name = name,
+                        Number = number,
+                        UserId = user.Id,
+                        CollegeId = col.Id,
+                        MajorId = maj.Id,
+                        CreateTime = DateTime.Now,
+                        State = State.未锁定,
+                    };
+                    DB.Students.Add(student);
+                    DB.SaveChanges();
+                    return Content("success");
+                }
+                else
+                {
+                    return Content("password");
+                }
+                
             }
             
         }
