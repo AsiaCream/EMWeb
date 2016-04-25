@@ -101,7 +101,9 @@ namespace EMWeb.Controllers
                     });
                 }
 
-                
+                ViewBag.Teacher = DB.Teachers
+                    .Where(x => x.UserId == teacher.UserId)
+                    .SingleOrDefault();
                 return PagedView(ret,20);
             }
             
