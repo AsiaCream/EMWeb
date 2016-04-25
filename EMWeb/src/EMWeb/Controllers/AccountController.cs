@@ -94,6 +94,21 @@ namespace EMWeb.Controllers
             await SignInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Modify(string password,string newpwd)
+        {
+           var result= await UserManager.ChangePasswordAsync(User.Current,password,newpwd);
+            if (result.Succeeded)
+            {
+                await SignInManager.SignOutAsync();
+                return Content("success");
+            }
+            else
+            {
+                return Content("error");
+            }
+        }
         [Authorize(Roles =("系主任"))]
         public async Task<IActionResult> CreateTeacher(string name,int number,string username,
             string password,string college,string major,string isheadTeacher)

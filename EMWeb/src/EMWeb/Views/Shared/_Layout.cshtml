@@ -47,7 +47,7 @@
                     }
                     @if (User.IsInRole("系主任"))
                     {
-                        <li><a asp-action="Subject" aps-controller="Admin">选题 <span class="sr-only">(current)</span></a></li>
+                        <li><a asp-action="Subject" aps-controller="Admin">选题</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">学院 <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
@@ -60,7 +60,14 @@
                                 <li><a asp-action="AllMajor" asp-controller="System">查看所有专业</a></li>
                             </ul>
                         </li>
-                        <li><a asp-action="Log" asp-controller="System">系统日志</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">日志 <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a asp-action="Log" asp-controller="System">系统日志</a></li>
+                                <li><a asp-action="TeacherLog" asp-controller="System">教师日志</a></li>
+                                <li><a asp-action="StudentLog" asp-controller="System">学生日志</a></li>
+                            </ul>
+                        </li>
                     }
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">毕业设计 <span class="caret"></span></a>
@@ -91,7 +98,7 @@
                                 <li><a asp-action="Manage" asp-controller="Admin">个人中心</a></li>
 
                             }
-                            <li><a asp-action="Modify" asp-controller="Account">修改密码</a></li>
+                            <li><a href="#" id="modify">修改密码</a></li>
                             <li><a href="javascript:$('#Logout').submit()">退出</a></li>
                         </ul>
                         <form asp-action="Logout" asp-controller="Account" id="Logout"></form>
@@ -114,10 +121,60 @@
 
         </footer>
     </div>
-    <script src="~/scripts/jquery-2.1.1.js"></script>
-    <script src="~/scripts/bootstrap.min.js"></script>
-    <script src="~/scripts/custom.js"></script>
-    <script src="~/scripts/codecomb.cascade.js"></script>
+    
+    <div class="modal fade" id="editpassword">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">修改密码</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="password" id="oldpwd" name="oldpwd" class="form-control" placeholder="旧密码"/><br />
+                    <input type="password" id="newpwd" name="newpwd" class="form-control" placeholder="新密码" /><br />
+                    <input type="password" id="confirmpwd" name="confirmpwd" class="form-control" placeholder="再次输入新密码" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
+                    <button type="button" id="send" class="btn btn-primary">提交</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
+<script src="~/scripts/jquery-2.1.1.js"></script>
+<script src="~/scripts/bootstrap.min.js"></script>
+<script src="~/scripts/custom.js"></script>
+<script src="~/scripts/codecomb.cascade.js"></script>
+<script type="text/javascript">
+    $("#modify").click(function () {
+        $("#editpassword").modal("show");
+    });
+    $("#send").click(function () {
+        var oldpwd = $("#oldpwd").val();
+        var newpwd = $("#newpwd").val();
+        var confirmpwd = $("#confirmpwd").val();
+        if (oldpwd == "" || newpwd == "" || confirmpwd == "") {
+            alert("请正确输入");
+        }
+        else if (newpwd != confirmpwd) {
+            alert("两次输入密码不一致，请检查");
+        }
+        else {
+            $.post("/Account/Modify", { password: oldpwd, newpwd: newpwd }, function (data) {
+                if (data == "success") {
+                    alert("修改成功");
+                    window.location.href = "/Account/Login";
+                }
+                else if (data == "error") {
+                    alert("旧密码输入错误，请检查");
+                }
+                else {
+                    alert("修改失败");
+                }
+            });
+        }
+    });
+</script>
 
