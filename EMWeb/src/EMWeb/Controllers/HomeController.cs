@@ -43,12 +43,19 @@ namespace EMWeb.Controllers
                     .Where(x => x.StudentId == student.Id)
                     .OrderByDescending(x => x.PostTime)
                     .FirstOrDefault();
-                var subjects = DB.Subjects
-                    .Include(x=>x.Teacher)
-                    .Include(x=>x.Student)
+                if (sub == null)
+                {
+                    return RedirectToAction("Error", "System");
+                }
+                else
+                {
+                    var subjects = DB.Subjects
+                    .Include(x => x.Teacher)
+                    .Include(x => x.Student)
                     .Where(x => x.TeacherId == sub.TeacherId)
                     .ToList();
-                return View(subjects);
+                    return View(subjects);
+                }
             }
         }
         [HttpGet]
