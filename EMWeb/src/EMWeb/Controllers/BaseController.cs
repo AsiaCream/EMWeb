@@ -7,7 +7,7 @@ using EMWeb.Models;
 
 namespace EMWeb.Controllers
 {
-    public class BaseController : BaseController<EMContext,User,string>
+    public class BaseController : BaseController<EMContext,User,long>
     {
     }
 }

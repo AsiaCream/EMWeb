@@ -5,7 +5,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>毕业设计高效管理网站</title>
+    <title>毕业设计管理网站</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <link rel="stylesheet" href="~/styles/bootstrap.css" media="screen">
@@ -15,8 +15,23 @@
       <script src="~/script/html5shiv.js"></script>
       <script src="~/script/respond.min.js"></script>
     <![endif]-->
+    <style>
+        .information{
+            height:50px;
+            width:200px;
+            background-color:rgba(44,62,80,0.8);
+            top:50%;
+            z-index:1;
+            position:absolute;
+            left:50%;
+            margin-left:-100px;
+            margin-top:-100px;
+            display:none;
+        }
+    </style>
 </head>
 <body>
+    <div class="information"></div>
     <nav class="navbar navbar-default" style="border-radius:0;">
         <div class="container">
             <div class="navbar-header">
@@ -47,7 +62,7 @@
                     }
                     @if (User.IsInRole("系主任"))
                     {
-                        <li><a asp-action="Subject" aps-controller="Admin">选题</a></li>
+                        <li><a asp-action="Subject" asp-controller="Admin">选题</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">学院 <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
@@ -55,7 +70,7 @@
                             </ul>
                         </li>
                         <li class="dropdown">
-                            <a asp-action="AllMajor" asp-controller="System" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">专业 <span class="caret"></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">专业 <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
                                 <li><a asp-action="AllMajor" asp-controller="System">查看所有专业</a></li>
                             </ul>
@@ -115,7 +130,6 @@
             <div class="row">
                 <div class="col-lg-12 text-center">
                     <p>Design by &copy;<a href="http://www.asiacream.cn" target="_blank">Cream</a>.</p>
-                    <p>技术支持 <a href="http://www.codecomb.com" target="_blank">码锋科技有限责任公司</a>.</p>
                 </div>
             </div>
 

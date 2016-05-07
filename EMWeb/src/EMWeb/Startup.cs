@@ -24,11 +24,18 @@ namespace EMWeb
                 .AddSqlite()
                 .AddDbContext<EMContext>(x => x.UseSqlite("Data source=" + appEnv.ApplicationBasePath + "/Database/EMWeb.db"));
 
-            services.AddIdentity<User, IdentityRole>()
-                .AddEntityFrameworkStores<EMContext>()
+            services.AddIdentity<User, IdentityRole<long>>(x=> {
+                x.Password.RequireDigit = false;
+                x.Password.RequiredLength = 0;
+                x.Password.RequireLowercase = false;
+                x.Password.RequireNonLetterOrDigit = false;
+                x.Password.RequireUppercase = false;
+                x.User.AllowedUserNameCharacters = null;
+            })
+                .AddEntityFrameworkStores<EMContext,long>()
                 .AddDefaultTokenProviders();
             services.AddMvc();
-            services.AddSmartUser<User,string>();
+            services.AddSmartUser<User,long>();
 
             
         }

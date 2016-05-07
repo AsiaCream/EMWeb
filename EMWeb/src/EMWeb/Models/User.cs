@@ -7,7 +7,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace EMWeb.Models
 {
-    public class User:IdentityUser
+    public class User:IdentityUser<long>
     {
     }
 }

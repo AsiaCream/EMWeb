@@ -5,7 +5,7 @@
             <div class="col-md-3">
                 <div class="caption">
                     <div class="thumbnail">
-                        <img src="~/images/person.png" />
+                        <a href="#" id="editAvatar"><img src="~/images/person.png" /></a>
                     </div>
                 </div>
                 <table class="table">
@@ -17,7 +17,7 @@
                             </tr>
                         }
                         <tr>
-                            <td><a class="btn btn-primary form-control">提交毕业设计报告</a></td>
+                            <td><a asp-action="Report" asp-controller="Home" class="btn btn-primary form-control">提交毕业设计报告</a></td>
                         </tr>
                         <tr>
                             <td><a class="btn btn-primary form-control">添加毕业设计文件</a></td>
@@ -29,7 +29,7 @@
                 </table>
             </div>
             <div class="col-md-8 col-md-offset-1">
-                <h2>@User.Current.UserName</h2>
+                <h2>@User.Current.UserName &nbsp;<a asp-action="Announcement" asp-controller="Home" style="font-size:20px;">最新公告:@ViewBag.Announcement</a></h2>
                 <hr />
                 <table class="table">
                     <thead>
@@ -112,8 +112,8 @@
             $.post(url, params, function (data) {
                 if (data == "success") {
                     alert("添加选题成功");
-                    document.getElementById("subjectTitle").value = "";
                     $("#createSubject").modal("hide");
+                    window.location.href = "/Home/Center";
                 }
                 else if (data == "锁定") {
                     alert("您题目已经审核通过，无法再提交题目");

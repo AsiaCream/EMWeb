@@ -17,7 +17,7 @@ namespace EMWeb.Models
         public double Score { get; set; }//分数
 
         [ForeignKey("User")]
-        public string UserId { get; set; }
+        public long UserId { get; set; }
         public virtual User User { get; set; }
 
         [ForeignKey("File")]

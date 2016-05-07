@@ -7,7 +7,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace EMWeb.Models
 {
-    public class EMContext:IdentityDbContext<User>
+    public class EMContext:IdentityDbContext<User,IdentityRole<long>,long>
     {
         public DbSet<File> Files { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
@@ -16,6 +16,7 @@ namespace EMWeb.Models
         public DbSet<Major> Majors { get; set; }
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Log> Logs { get; set; }
+        public DbSet<Announcement> Announcements { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -49,6 +50,11 @@ namespace EMWeb.Models
             {
                 e.HasIndex(x => x.Id);
             });
+            builder.Entity<Announcement>(e =>
+            {
+                e.HasIndex(x => x.Id);
+            });
+
         }
     }
 }

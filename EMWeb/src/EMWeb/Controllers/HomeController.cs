@@ -120,6 +120,7 @@ namespace EMWeb.Controllers
                     .OrderByDescending(x => x.CreateTime)
                     .ToList();
                     ViewBag.Teacher = teacher;
+                    ViewBag.Announcement = DB.Announcements.OrderByDescending(x => x.Id).First().CreateTime;
                     return View(student);
                 }
                 else
@@ -128,6 +129,7 @@ namespace EMWeb.Controllers
                     ViewBag.SubjectTeacher = DB.Teachers
                         .Where(x => x.Id == teacherid)
                         .SingleOrDefault();
+                    ViewBag.Announcement = DB.Announcements.OrderByDescending(x => x.Id).First().CreateTime;
                     return View(student);
                 }
                 
@@ -137,6 +139,12 @@ namespace EMWeb.Controllers
                 return RedirectToAction("Error","Home");
             }
                     }
+        [HttpGet]
+        [Authorize(Roles =("学生"))]
+        public IActionResult Report()
+        {
+            return View();
+        }
         [HttpGet]
         public IActionResult GetMajor(string college)
         {
@@ -202,6 +210,14 @@ namespace EMWeb.Controllers
             {
                 return View(major);
             }
+        }
+        [HttpGet]
+        public IActionResult Announcement()
+        {
+            var ret = DB.Announcements
+                .OrderByDescending(x => x.CreateTime)
+                .ToList();
+            return View(ret);
         }
         
     }

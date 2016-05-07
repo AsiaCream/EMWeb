@@ -16,31 +16,38 @@ namespace EMWeb.Models
 
             var userManager = services.GetRequiredService<UserManager<User>>();
 
-            var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+            var roleManager = services.GetRequiredService<RoleManager<IdentityRole<long>>>();
 
             if (DB.Database != null && DB.Database.EnsureCreated())
             {
-                await roleManager.CreateAsync(new IdentityRole { Name = "系主任" });
-                await roleManager.CreateAsync(new IdentityRole { Name = "指导老师" });
-                await roleManager.CreateAsync(new IdentityRole { Name = "学生" });
+                await roleManager.CreateAsync(new IdentityRole<long> { Name = "系主任" });
+                await roleManager.CreateAsync(new IdentityRole<long> { Name = "指导老师" });
+                await roleManager.CreateAsync(new IdentityRole<long> { Name = "学生" });
 
                 var headteacher = new User { UserName = "Admin",Email="343224963@qq.com" };
-                await userManager.CreateAsync(headteacher, "Cream2015!@#");
+                await userManager.CreateAsync(headteacher, "123456");
                 await userManager.AddToRoleAsync(headteacher, "系主任");
 
                 var teacher = new User { UserName = "Cream", Email = "343224963@qq.com" };
-                await userManager.CreateAsync(teacher, "Cream2015!@#");
+                await userManager.CreateAsync(teacher, "123456");
                 await userManager.AddToRoleAsync(teacher, "指导老师");
 
                 var guest = new User { UserName = "Guest", Email = "627148026@qq.com" };
-                await userManager.CreateAsync(guest, "Cream2015!@#");
+                await userManager.CreateAsync(guest, "123456");
                 await userManager.AddToRoleAsync(guest, "学生");
 
                 var college = new College { Title = "计算机与控制工程学院" };
                 DB.Colleges.Add(college);
                 var major = new Major { CollegeId = college.Id, Title = "软件工程" };
                 DB.Majors.Add(major);
-
+                var announcement = new Announcement
+                {
+                    Title = "请提交毕业设计题目",
+                    Content = "请提交毕业设计题目",
+                    CreateTime = DateTime.Now,
+                };
+                DB.Announcements.Add(announcement);
+                DB.SaveChanges();
                 var teacherzhang = new Teacher
                 {   Name = "张老师",
                     Number = 2012023110,
@@ -98,6 +105,16 @@ namespace EMWeb.Models
                     UserId = headteacher.Id
                 };
                 DB.Logs.Add(log3);
+                var log4 = new Log
+                {
+                    Roles = Roles.系主任,
+                    Operation = Operation.添加系统公告,
+                    Time = DateTime.Now,
+                    Number=announcement.Id,
+                    UserId = headteacher.Id
+                };
+                DB.Logs.Add(log4);
+                
             }
             DB.SaveChanges();
         }

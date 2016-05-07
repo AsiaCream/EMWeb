@@ -43,6 +43,7 @@ namespace EMWeb.Models
         删除学生,
         删除老师,
         删除系主任,
+        添加系统公告,
     }
     public class Log
     {
@@ -57,7 +58,7 @@ namespace EMWeb.Models
         public int Number { get; set; }
 
         [ForeignKey("User")]
-        public string UserId { get; set; }
+        public long UserId { get; set; }
         public virtual User User { get; set; }
     }
 }

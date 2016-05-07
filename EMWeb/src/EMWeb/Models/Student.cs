@@ -27,7 +27,7 @@ namespace EMWeb.Models
         public State State { get; set; }
 
         [ForeignKey("User")]
-        public string UserId { get; set; }
+        public long UserId { get; set; }
         public virtual User User { get; set; }
 
         [ForeignKey("College")]
