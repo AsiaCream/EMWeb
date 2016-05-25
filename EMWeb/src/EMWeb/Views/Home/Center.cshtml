@@ -17,13 +17,16 @@
                             </tr>
                         }
                         <tr>
-                            <td><a asp-action="Report" asp-controller="Home" class="btn btn-primary form-control">提交毕业设计报告</a></td>
+                            <td><a asp-action="Report" asp-controller="Home" class="btn btn-primary form-control">查看毕业设计报告</a></td>
                         </tr>
                         <tr>
-                            <td><a class="btn btn-primary form-control">添加毕业设计文件</a></td>
+                            <td><a asp-action="Thesis" asp-controller="Home" class="btn btn-primary form-control">查看毕业设计论文</a></td>
                         </tr>
                         <tr>
-                            <td><a class="btn btn-primary form-control">添加毕业设计代码</a></td>
+                            <td><a asp-action="SourceCode" asp-controller="Home" class="btn btn-primary form-control">查看毕业设计代码</a></td>
+                        </tr>
+                        <tr>
+                            <td><a asp-action="Document" asp-controller="Home" class="btn btn-primary form-control">毕业设计相关文件</a></td>
                         </tr>
                     </tbody>
                 </table>

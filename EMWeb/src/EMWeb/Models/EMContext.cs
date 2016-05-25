@@ -9,7 +9,7 @@ namespace EMWeb.Models
 {
     public class EMContext:IdentityDbContext<User,IdentityRole<long>,long>
     {
-        public DbSet<File> Files { get; set; }
+        public DbSet<FileInfo> FinleInfos { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<Student> Students { get; set; }
         public DbSet<College> Colleges { get; set; }
@@ -22,7 +22,7 @@ namespace EMWeb.Models
         {
             base.OnModelCreating(builder);
 
-            builder.Entity<File>(e =>
+            builder.Entity<FileInfo>(e =>
             {
                 e.HasIndex(x => x.Id);
             });
