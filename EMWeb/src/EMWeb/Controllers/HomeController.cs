@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Authorization;
+using Microsoft.Data.Entity;
+using System.IO;
+using Microsoft.AspNet.Http;
 using EMWeb.Models;
 using EMWeb.ViewModels;
-using Microsoft.Data.Entity;
 
 namespace EMWeb.Controllers
 {
@@ -39,22 +41,22 @@ namespace EMWeb.Controllers
             }
             else
             {
-                var sub = DB.Subjects
+                var subject = DB.Subjects
                     .Where(x => x.StudentId == student.Id)
                     .OrderByDescending(x => x.PostTime)
                     .FirstOrDefault();
-                if (sub == null)
+                if (subject == null)
                 {
-                    return RedirectToAction("Error", "System");
+                    return RedirectToAction("Error", "Home");
                 }
                 else
                 {
-                    var subjects = DB.Subjects
+                    var ret = DB.Subjects
                     .Include(x => x.Teacher)
                     .Include(x => x.Student)
-                    .Where(x => x.TeacherId == sub.TeacherId)
+                    .Where(x => x.TeacherId == subject.TeacherId)
                     .ToList();
-                    return View(subjects);
+                    return View(ret);
                 }
             }
         }
@@ -143,8 +145,174 @@ namespace EMWeb.Controllers
         [Authorize(Roles =("学生"))]
         public IActionResult Report()
         {
-            return View();
+            var stud = DB.Students
+                .Where(x => x.UserId == User.Current.Id)
+                .SingleOrDefault();
+            var rep = DB.FinleInfos
+                .Where(x => x.StudentId == stud.Id)
+                .Where(x=>x.FType==FType.报告)
+                .ToList();
+                return View(rep);
         }
+        [Authorize(Roles =("学生"))]
+        [HttpPost]
+        public IActionResult CreateReport(long id,string filename,IFormFile file)
+        {
+            var user = DB.Users
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            file.SaveAs(".\\wwwroot\\uploads\\" + user.UserName+"\\report\\"+filename+".docx");
+            var fileinfo = new Models.FileInfo
+            {
+                Title=filename,
+                CreateTime=DateTime.Now,
+                Path= user.UserName + "\\report\\" + filename + ".docx",
+                FType=FType.报告,
+                StudentId = DB.Students.Where(x => x.UserId == user.Id).SingleOrDefault().Id,
+               
+            };
+            DB.FinleInfos.Add(fileinfo);
+            DB.SaveChanges();
+            var log = DB.Logs.Add(new Log
+            {
+                Roles=Roles.学生,
+                Operation=Operation.上传文件,
+                Time=DateTime.Now,
+                Number=fileinfo.Id,
+                UserId=User.Current.Id,
+            });
+            DB.SaveChanges();
+            return RedirectToAction("Report","Home");
+        }
+        [HttpGet]
+        [Authorize(Roles = ("学生"))]
+        public IActionResult SourceCode()
+        {
+            var stud = DB.Students
+                .Where(x => x.UserId == User.Current.Id)
+                .SingleOrDefault();
+            var ret = DB.FinleInfos
+                .Where(x => x.StudentId == stud.Id)
+                .Where(x => x.FType == FType.源代码)
+                .ToList();
+            return View(ret);
+        }
+        [HttpPost]
+        [Authorize(Roles =("学生"))]
+        public IActionResult CreateSourceCode(long id,string filename,IFormFile file)
+        {
+            var user = DB.Users
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            file.SaveAs(".\\wwwroot\\uploads\\" + user.UserName + "\\sourcecode\\" + filename + ".zip");
+            var fileinfo = new Models.FileInfo
+            {
+                Title = filename,
+                CreateTime = DateTime.Now,
+                Path = user.UserName + "\\sourcecode\\" + filename + ".zip",
+                FType = FType.源代码,
+                StudentId = DB.Students.Where(x => x.UserId == user.Id).SingleOrDefault().Id,
+
+            };
+            DB.FinleInfos.Add(fileinfo);
+            DB.SaveChanges();
+            var log = DB.Logs.Add(new Log
+            {
+                Roles = Roles.学生,
+                Operation = Operation.上传文件,
+                Time = DateTime.Now,
+                Number = fileinfo.Id,
+                UserId = User.Current.Id,
+            });
+            DB.SaveChanges();
+            return RedirectToAction("SourceCode", "Home");
+        }
+        [HttpGet]
+        [Authorize(Roles = ("学生"))]
+        public IActionResult Thesis()
+        {
+            var stud = DB.Students
+                .Where(x => x.UserId == User.Current.Id)
+                .SingleOrDefault();
+            var ret = DB.FinleInfos
+                .Where(x => x.StudentId == stud.Id)
+                .Where(x => x.FType == FType.论文)
+                .ToList();
+            return View(ret);
+        }
+        [HttpPost]
+        [Authorize(Roles = ("学生"))]
+        public IActionResult CreateThesis(long id,string filename,IFormFile file)
+        {
+            var user = DB.Users
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            file.SaveAs(".\\wwwroot\\uploads\\" + user.UserName + "\\thesis\\" + filename + ".docx");
+            var fileinfo = new Models.FileInfo
+            {
+                Title = filename,
+                CreateTime = DateTime.Now,
+                Path = user.UserName + "\\thesis\\" + filename + ".docx",
+                FType = FType.论文,
+                StudentId = DB.Students.Where(x => x.UserId == user.Id).SingleOrDefault().Id,
+
+            };
+            DB.FinleInfos.Add(fileinfo);
+            DB.SaveChanges();
+            var log = DB.Logs.Add(new Log
+            {
+                Roles = Roles.学生,
+                Operation = Operation.上传文件,
+                Time = DateTime.Now,
+                Number = fileinfo.Id,
+                UserId = User.Current.Id,
+            });
+            DB.SaveChanges();
+            return RedirectToAction("Thesis", "Home");
+        }
+        [Authorize(Roles = ("学生"))]
+        public IActionResult Document()
+        {
+            var stud = DB.Students
+                .Where(x => x.UserId == User.Current.Id)
+                .SingleOrDefault();
+            var ret = DB.FinleInfos
+                .Where(x => x.StudentId == stud.Id)
+                .Where(x => x.FType == FType.文档)
+                .ToList();
+            return View(ret);
+        }
+        [HttpPost]
+        [Authorize(Roles = ("学生"))]
+        public IActionResult CreateDocument(long id, string filename, IFormFile file)
+        {
+            var user = DB.Users
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            file.SaveAs(".\\wwwroot\\uploads\\" + user.UserName + "\\document\\" + filename + ".docx");
+            var fileinfo = new Models.FileInfo
+            {
+                Title = filename,
+                CreateTime = DateTime.Now,
+                Path = user.UserName + "\\document\\" + filename + ".docx",
+                FType = FType.文档,
+                StudentId = DB.Students.Where(x => x.UserId == user.Id).SingleOrDefault().Id,
+
+            };
+            DB.FinleInfos.Add(fileinfo);
+            DB.SaveChanges();
+            var log = DB.Logs.Add(new Log
+            {
+                Roles = Roles.学生,
+                Operation = Operation.上传文件,
+                Time = DateTime.Now,
+                Number = fileinfo.Id,
+                UserId = User.Current.Id,
+            });
+            DB.SaveChanges();
+            return RedirectToAction("Thesis", "Home");
+        }
+
         [HttpGet]
         public IActionResult GetMajor(string college)
         {
