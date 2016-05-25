@@ -20,8 +20,8 @@ namespace EMWeb.Models
         public long UserId { get; set; }
         public virtual User User { get; set; }
 
-        [ForeignKey("File")]
-        public int FileId { get; set; }
-        public virtual File File { get; set; }
+        [ForeignKey("FileInfo")]
+        public int FileInfoId { get; set; }
+        public virtual FileInfo FileInfo { get; set; }
     }
 }
