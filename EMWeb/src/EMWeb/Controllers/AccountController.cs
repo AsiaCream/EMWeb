@@ -6,6 +6,7 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Authorization;
 using System.Security.Claims;
 using EMWeb.Models;
+using System.IO;
 
 namespace EMWeb.Controllers
 {
@@ -86,6 +87,11 @@ namespace EMWeb.Controllers
                     };
                     DB.Students.Add(student);
                     DB.SaveChanges();
+                    //为注册成功的用户创建文件夹
+                    Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username+"report");
+                    Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username+"document");
+                    Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username+"thesis");
+                    Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username + "sourcecode");
                     return Content("success");
                 }
                 else
