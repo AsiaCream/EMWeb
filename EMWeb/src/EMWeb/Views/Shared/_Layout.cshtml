@@ -64,7 +64,6 @@
                     }
                     @if (User.IsInRole("系主任"))
                     {
-                        <li><a asp-action="Subject" asp-controller="Admin">选题</a></li>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">学院 <span class="caret"></span></a>
                             <ul class="dropdown-menu" role="menu">
@@ -85,14 +84,26 @@
                                 <li><a asp-action="StudentLog" asp-controller="System">学生日志</a></li>
                             </ul>
                         </li>
+                        <li><a asp-action="StudentList" asp-controller="Admin">学生列表</a></li>
+                    }
+                    @if (User.IsInRole("指导老师"))
+                    {
+                        <li><a asp-action="StudentList" asp-controller="Admin">学生列表</a></li>
                     }
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">毕业设计 <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">毕业设计选题</a></li>
-                            <li><a href="#">毕业设计开题</a></li>
+                            <li><a asp-action="Subject" asp-controller="Admin">毕业设计选题</a></li>
                             <li><a href="#">毕业设计报告</a></li>
-                            <li><a href="#">毕业设计评分</a></li>
+                            <li><a href="#">毕业设计论文</a></li>
+                            <li><a href="#">毕业设计源代码</a></li>
+                            <li><a href="#">毕业设计文档</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">公告 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a asp-action="Announcement" asp-controller="Home">查看公告列表</a></li>
                         </ul>
                     </li>
                 </ul>
