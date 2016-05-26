@@ -1,0 +1,67 @@
+﻿@model IEnumerable<StudentList>
+@if (User.IsInRole("系主任"))
+{
+    <div class="container">
+        <h2 style="margin:0;padding:0;" class="text-center">所有学生列表</h2>
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>姓名</th>
+                    <th>学号</th>
+                    <th>学院</th>
+                    <th>专业</th>
+                    <th>注册时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="subject-list">
+                @foreach (var x in Model)
+                {
+                    <tr id="table-tr-@x.Id">
+                        <td>@x.Id</td>
+                        <td>@x.Name</td>
+                        <td>@x.StudentNumber</td>
+                        <td>@x.College</td>
+                        <td>@x.Major</td>
+                        <td>@x.CreateTime</td>
+                        <td><a href="#">查看详细</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+@if (User.IsInRole("指导老师"))
+{
+    <div class="container">
+        <h2 style="margin:0;padding:0;" class="text-center">所有学生列表</h2>
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>姓名</th>
+                    <th>学号</th>
+                    <th>学院</th>
+                    <th>专业</th>
+                    <th>注册时间</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="subject-list">
+                @foreach (var x in Model)
+                {
+                    <tr id="table-tr-@x.Id">
+                        <td>@x.Id</td>
+                        <td>@x.Name</td>
+                        <td>@x.StudentNumber</td>
+                        <td>@x.College</td>
+                        <td>@x.Major</td>
+                        <td>@x.CreateTime</td>
+                        <td><a href="#">查看详细</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

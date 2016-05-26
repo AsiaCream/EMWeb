@@ -122,12 +122,13 @@ namespace EMWeb.Controllers
                 .SingleOrDefault();
             return View(teacher);
         }
+        #region 指导老师和系主任审核题目方法
         [HttpPost]
         [AnyRoles("指导老师,系主任")]
         public IActionResult Pass(int id)
         {
             var subject = DB.Subjects
-                .Include(x=>x.Student)
+                .Include(x => x.Student)
                 .Where(x => x.Id == id)
                 .SingleOrDefault();
             if (subject == null)
@@ -146,9 +147,9 @@ namespace EMWeb.Controllers
                 var ordersub = DB.Subjects
                     .Where(x => x.StudentId == student.Id)
                     .Where(x => x.Id != subject.Id)
-                    .Where(x=>x.Draw==Draw.待审核)
+                    .Where(x => x.Draw == Draw.待审核)
                     .ToList();
-                foreach(var x in ordersub)
+                foreach (var x in ordersub)
                 {
                     x.Draw = Draw.未通过;
                     x.DrawTime = DateTime.Now;
@@ -200,6 +201,95 @@ namespace EMWeb.Controllers
                 DB.Logs.Add(log);
                 DB.SaveChanges();
                 return Content("success");
+            }
+        } 
+        #endregion
+        /// <summary>
+        /// 系主任查看所有学生，指导老师查看已经选择了他的学生
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AnyRoles("指导老师,系主任")]
+        public IActionResult StudentList()
+        {
+            var teacher = DB.Teachers
+                    .Where(x => x.UserId == User.Current.Id)
+                    .SingleOrDefault();
+            if (User.IsInRole("指导老师"))
+            {
+                //指导老师查看选择了自己的学生
+                var student = DB.Subjects
+                    .Include(x => x.Student)
+                    .Where(x => x.TeacherId == teacher.Id)
+                    .OrderBy(x=>x.StudentId)
+                    .ToList();
+                var ret = new List<StudentList>();
+                foreach (var x in student)
+                {
+                    ret.Add(new StudentList
+                    {
+                        Id = x.Student.Id,
+                        Name = x.Student.Name,
+                        StudentNumber = x.Student.Number.ToString(),
+                        College = DB.Colleges.Where(y => y.Id == x.Student.CollegeId).SingleOrDefault().Title,
+                        Major = DB.Majors.Where(y => y.Id == x.Student.MajorId).SingleOrDefault().Title,
+                        CreateTime = x.Student.CreateTime.ToString(),
+                    });
+                }
+                return View(ret);
+            }
+            else
+            {
+                //系主任查看自己专业相关的学生
+                var student = DB.Subjects
+                    .Include(x => x.Student)
+                    .Where(x=>x.Student.MajorId==teacher.MajorId)
+                    .OrderBy(x => x.StudentId)
+                    .ToList();
+                var ret = new List<StudentList>();
+                foreach(var x in student) {
+                    ret.Add(new StudentList
+                    {
+                        Id=x.Student.Id,
+                        Name=x.Student.Name,
+                        StudentNumber=x.Student.Number.ToString(),
+                        College=DB.Colleges.Where(y=>y.Id==x.Student.CollegeId).SingleOrDefault().Title,
+                        Major=DB.Majors.Where(y=>y.Id==x.Student.MajorId).SingleOrDefault().Title,
+                        CreateTime=x.Student.CreateTime.ToString(),
+                    });
+                }
+                return View(ret);
+            }
+        }
+        /// <summary>
+        /// 指导老师和系主任查看学生详细页面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AnyRoles("系主任,指导老师")]
+        public IActionResult StudentDetails(int id)
+        {
+            var teacher = DB.Teachers
+                    .Where(x => x.UserId == User.Current.Id)
+                    .SingleOrDefault();
+            if (User.IsInRole("指导老师"))
+            {
+                var ret = DB.Subjects
+                .Include(x => x.Student)
+                .Where(x => x.StudentId == id)
+                .Where(x => x.TeacherId == teacher.Id)
+                .SingleOrDefault();
+                return View(ret);
+            }
+            else
+            {
+                var ret = DB.Subjects
+                .Include(x => x.Student)
+                .Where(x => x.StudentId == id)
+                .Where(x=>x.Student.MajorId==teacher.MajorId)
+                .SingleOrDefault();
+                return View(ret);
             }
         }
     }
