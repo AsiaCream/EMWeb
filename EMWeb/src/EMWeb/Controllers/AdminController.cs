@@ -83,6 +83,7 @@ namespace EMWeb.Controllers
                 var subject = DB.Subjects
                     .Include(x=>x.Teacher)
                     .Include(x=>x.Student)
+                    .Where(x=>x.Student.MajorId==teacher.MajorId)
                 .OrderBy(x => x.Id)
                 .ToList();
                 var ret = new List<MajorStudent>();
@@ -234,6 +235,8 @@ namespace EMWeb.Controllers
                         College = DB.Colleges.Where(y => y.Id == x.Student.CollegeId).SingleOrDefault().Title,
                         Major = DB.Majors.Where(y => y.Id == x.Student.MajorId).SingleOrDefault().Title,
                         CreateTime = x.Student.CreateTime.ToString(),
+                        Teacher=teacher.Name,
+                        Subject=x.Title,
                     });
                 }
                 return View(ret);
@@ -256,6 +259,9 @@ namespace EMWeb.Controllers
                         College=DB.Colleges.Where(y=>y.Id==x.Student.CollegeId).SingleOrDefault().Title,
                         Major=DB.Majors.Where(y=>y.Id==x.Student.MajorId).SingleOrDefault().Title,
                         CreateTime=x.Student.CreateTime.ToString(),
+                        Teacher=DB.Teachers.Where(y=>y.Id==x.TeacherId).SingleOrDefault().Name,
+                        Subject=x.Title,
+                        
                     });
                 }
                 return View(ret);
@@ -275,20 +281,18 @@ namespace EMWeb.Controllers
                     .SingleOrDefault();
             if (User.IsInRole("指导老师"))
             {
-                var ret = DB.Subjects
-                .Include(x => x.Student)
-                .Where(x => x.StudentId == id)
-                .Where(x => x.TeacherId == teacher.Id)
-                .SingleOrDefault();
+                var ret = DB.FinleInfos
+                    .Include(x => x.Student)
+                    .Where(x => x.StudentId == id)
+                    .ToList();
                 return View(ret);
             }
             else
             {
-                var ret = DB.Subjects
-                .Include(x => x.Student)
-                .Where(x => x.StudentId == id)
-                .Where(x=>x.Student.MajorId==teacher.MajorId)
-                .SingleOrDefault();
+                var ret = DB.FinleInfos
+                    .Include(x=>x.Student)
+                    .Where(x => x.StudentId == id)
+                    .ToList();
                 return View(ret);
             }
         }

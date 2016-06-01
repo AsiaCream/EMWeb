@@ -64,14 +64,14 @@ namespace EMWeb.Controllers
         [Authorize(Roles =("学生"))]
         public IActionResult MySubjectLog()
         {
-            var logs = DB.Logs
-                .Where(x => x.Roles == Roles.学生)
-                .Where(x => x.UserId == User.Current.Id)
-                .ToList();
-
             var student = DB.Students
                 .Where(x => x.UserId == User.Current.Id)
                 .SingleOrDefault();
+
+            var logs = DB.Logs
+                .Where(x => x.Roles == Roles.学生&&x.Operation==Operation.添加毕业设计选题)
+                .Where(x => x.UserId == User.Current.Id)
+                .ToList();
 
             var subject = DB.Subjects
                 .Where(x => x.StudentId == student.Id)
@@ -310,7 +310,7 @@ namespace EMWeb.Controllers
                 UserId = User.Current.Id,
             });
             DB.SaveChanges();
-            return RedirectToAction("Thesis", "Home");
+            return RedirectToAction("Document", "Home");
         }
 
         [HttpGet]

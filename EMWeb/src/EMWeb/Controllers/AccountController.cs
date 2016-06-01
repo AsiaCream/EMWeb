@@ -61,44 +61,49 @@ namespace EMWeb.Controllers
             }
             else
             {
-                var col = DB.Colleges
-                    .Where(x => x.Title == college)
-                    .SingleOrDefault();
-                var maj = DB.Majors
-                    .Where(x => x.Title == major)
-                    .SingleOrDefault();
-                var user = new User
-                {
-                    UserName = username,
-                };
-                var result = await UserManager.CreateAsync(user, password);
-                if (result.Succeeded)
-                {
-                    await UserManager.AddToRoleAsync(user, "学生");
-                    var student = new Student
-                    {
-                        Name = name,
-                        Number = number,
-                        UserId = user.Id,
-                        CollegeId = col.Id,
-                        MajorId = maj.Id,
-                        CreateTime = DateTime.Now,
-                        State = State.未锁定,
-                    };
-                    DB.Students.Add(student);
-                    DB.SaveChanges();
-                    //为注册成功的用户创建文件夹
-                    Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username+"\\report");
-                    Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username+"\\document");
-                    Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username+"\\thesis");
-                    Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username + "\\sourcecode");
-                    return Content("success");
-                }
+                if (college == "请选择您的学院")
+                    return Content("请选择您的学院");
                 else
                 {
-                    return Content("password");
+                    var col = DB.Colleges
+                    .Where(x => x.Title == college)
+                    .SingleOrDefault();
+                    var maj = DB.Majors
+                        .Where(x => x.Title == major)
+                        .SingleOrDefault();
+                    var user = new User
+                    {
+                        UserName = username,
+                    };
+                    var result = await UserManager.CreateAsync(user, password);
+                    if (result.Succeeded)
+                    {
+                        await UserManager.AddToRoleAsync(user, "学生");
+                        var student = new Student
+                        {
+                            Name = name,
+                            Number = number,
+                            UserId = user.Id,
+                            CollegeId = col.Id,
+                            MajorId = maj.Id,
+                            CreateTime = DateTime.Now,
+                            State = State.未锁定,
+                        };
+                        DB.Students.Add(student);
+                        DB.SaveChanges();
+                        //为注册成功的用户创建文件夹
+                        Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username + "\\report");
+                        Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username + "\\document");
+                        Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username + "\\thesis");
+                        Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username + "\\sourcecode");
+                        return Content("success");
+                    }
+                    else
+                    {
+                        return Content("password");
+                    }
+
                 }
-                
             }
             
         }
