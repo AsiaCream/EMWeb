@@ -60,7 +60,7 @@ namespace EMWeb.Models
 
                 var teacherfdd = new Teacher
                 {
-                    Name = "付东东",
+                    Name = "王老师",
                     Number = 2012023005,
                     CreateTime = DateTime.Now,
                     UserId = teacher.Id,

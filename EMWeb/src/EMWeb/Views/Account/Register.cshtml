@@ -44,34 +44,6 @@
                 </button>
             </div>
             <div class="navbar-collapse collapse" id="navbar-main">
-                <ul class="nav navbar-nav">
-                    @*<li class="dropdown">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="themes">学院 <span class="caret"></span></a>
-                        <ul class="dropdown-menu" aria-labelledby="themes">
-                            <li><a href="./default/">Default</a></li>
-                            <li class="divider"></li>
-                            <li><a href="./cerulean/">Cerulean</a></li>
-                            <li><a href="./cosmo/">Cosmo</a></li>
-                            <li><a href="./cyborg/">Cyborg</a></li>
-                            <li><a href="./darkly/">Darkly</a></li>
-                            <li><a href="./flatly/">Flatly</a></li>
-                            <li><a href="./journal/">Journal</a></li>
-                            <li><a href="./lumen/">Lumen</a></li>
-                            <li><a href="./paper/">Paper</a></li>
-                            <li><a href="./readable/">Readable</a></li>
-                            <li><a href="./sandstone/">Sandstone</a></li>
-                            <li><a href="./simplex/">Simplex</a></li>
-                            <li><a href="./slate/">Slate</a></li>
-                            <li><a href="./spacelab/">Spacelab</a></li>
-                            <li><a href="./superhero/">Superhero</a></li>
-                            <li><a href="./united/">United</a></li>
-                            <li><a href="./yeti/">Yeti</a></li>
-                        </ul>
-                    </li>*@
-                    <li>
-                        <a asp-action="Help" asp-controller="Home">帮助说明</a>
-                    </li>
-                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a asp-action="Login" asp-controller="Account">登录</a></li>
                 </ul>
@@ -87,22 +59,34 @@
                      
                 </div>
                 <div class="col-lg-4 col-md-6">
-                    <form>
-                        <input type="text" name="name" placeholder="姓名" id="name" class="form-control" /><br />
-                        <input type="text" name="number" placeholder="学号" id="number" class="form-control" /><br />
-                        <input type="text" name="username" placeholder="用户名" id="username" class="form-control" /><br />
-                        <input type="password" name="password" placeholder="密码为5位以上任意字符" id="password" class="form-control" /><br />
-                        <input type="password" name="confirmpwd" placeholder="确认密码" id="confirmpwd" class="form-control" /><br />
-                        <select class="form-control" name="college" id="college">
-                            <option id="bug">请选择您的学院</option>
-                            @foreach(College x in ViewBag.College)
-                            {
-                                <option>@x.Title</option>
-                            }
-                        </select><br />
+                    <form id="registerfrm">
+                        <div class="form-group">
+                            <input type="text" name="name" placeholder="姓名" id="name" class="form-control form-group" />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="number" placeholder="学号" id="number" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <input type="text" name="username" placeholder="用户名" id="username" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="password" placeholder="密码为5位以上任意字符" id="password" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <input type="password" name="confirmpwd" placeholder="确认密码" id="confirmpwd" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" name="college" id="college">
+                                <option id="bug">请选择您的学院</option>
+                                @foreach (College x in ViewBag.College)
+                                {
+                                    <option>@x.Title</option>
+                                }
+                            </select>
+                        </div>
                         <div id="major-html"></div>
+                        <button type="submit" class="btn btn-success form-control">注册</button>
                     </form>
-                    <button type="button" id="send" class="btn btn-success form-control">注册</button>
                 </div>
             </div>
 
@@ -119,55 +103,11 @@
     </div>
     <script src="~/scripts/jquery-2.1.1.js"></script>
     <script src="~/scripts/bootstrap.min.js"></script>
+    <script src="~/scripts/bootstrapValidator.min.js"></script>
     <script src="~/scripts/custom.js"></script>
 </body>
 </html>
 <script type="text/javascript">
-    $("#send").click(function () {
-        var name = $("#name").val();
-        var number = $("#number").val();
-        var username = $("#username").val();
-        var password = $("#password").val();
-        var confirmpwd = $("#confirmpwd").val();
-        var college = $("#college").val();
-        var major = $("#major").val();
-        if (username == "") {
-            alert("用户名不能为空");
-        }
-        else if (password == "") {
-            alert("密码不能为空");
-        }
-        else if (confirmpwd == "") {
-            alert("确认密码不能为空");
-        }
-        else if (confirmpwd != password) {
-            alert("两次输入密码不一致");
-        }
-        else if (college == "请选择您的学院") {
-            alert("请选择正确的学院");
-        }
-        else {
-            var url = "/Account/Register";
-            var params = { name:name,number:number,username: username, password: password, college: college, major: major };
-            $.post(url, params, function (data) {
-                if (data == "success") {
-                    alert("注册成功,点击确定后跳转至登录页面...");
-                    window.location.href = "/Account/Login";
-                }
-                else if (data == "error") {
-                    alert("用户名" + username + "已经存在");
-                }
-                else if (data == "password") {
-                    alert("创建失败");
-                }
-                else {
-                    alert("未知错误");
-                }
-            });
-        }
-    });
-
-
     $("#college").change(function () {
         var college = $("#college").val();
         var url = "/Home/GetMajor";
@@ -182,5 +122,110 @@
             });
         }
     });
+        $(function () {
+            $("#registerfrm").bootstrapValidator({
+                message: '这个值没有被验证',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+
+                },
+                fields: {
+                    name: {
+                        message: '姓名没有验证',
+                        validators: {
+                            notEmpty: {
+                                message: '姓名不能为空'
+                            }
+                        }
+
+                    },
+                    number: {
+                        message: '学号还没有验证',
+                        validators: {
+                            notEmpty: {
+                                message: '学号不能为空'
+                            },
+                            numeric: {
+                                message: '学号只能是数字'
+
+                            },
+                            stringLength: {
+                                min: 10,
+                                max:10,
+                                message:'学号长度为十位数字'
+                            },
+
+                        }
+                    },
+                    username: {
+                        message: '用户名还没有验证',
+                        validators: {
+                            notEmpty: {
+                                message: '用户名不能为空'
+                            }
+                        }
+                    },
+                    
+                    password: {
+                        message: '密码还没有验证',
+                        validators: {
+                            notEmpty: {
+                                message: '密码不能为空'
+                            },
+                            stringLength: {
+                                min: 6,
+                                max: 12,
+                                message: '密码长度在6到12之间'
+                            },
+                        }
+                    },
+                    confirmpwd: {
+                        message: '确认密码还没有验证',
+                        validators: {
+                            notEmpty: {
+                                message: '确认密码不能为空'
+                            },
+                            identical: {
+                                field: 'password',
+                                message: '两次密码不同请重新输入'
+                            }
+                        }
+                    },
+                    college: {
+                        message: '学院还没有验证',
+                        validators: {
+                            notEmpty: {
+                                message: '学院不能为空'
+                            },
+                        }
+                    },
+                }
+            })
+            .on('success.form.bv', function (e) {
+                e.preventDefault();
+                var $form = $(e.target);
+                var bv = $form.data('bootstrapValidator');
+
+                $.post("/Account/Register", $form.serialize(), function (data) {
+                    if (data == "success") {
+                        alert("注册成功，即将跳转至登录页面...");
+                        window.location.href = "/Account/Login";
+                    } else if (data == "error") {
+                        alert("用户名已存在，重新注册");
+                        window.location.href = "/Account/Register";
+                    }
+                    else if (data == "请选择您的学院") {
+                        alert("请正确选择您的学院");
+
+                    }
+                    else {
+                        alert("注册失败，请重新注册！");
+                        window.location.href = "/Account/Register";
+                    }
+                });
+            });
+      });
 </script>
 

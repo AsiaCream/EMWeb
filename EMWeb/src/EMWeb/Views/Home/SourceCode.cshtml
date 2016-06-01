@@ -7,6 +7,7 @@
                     <tr>
                         <th>编号</th>
                         <th>标题</th>
+                        <th>文件类型</th>
                         <th>添加时间</th>
                         <th>操作</th>
                     </tr>
@@ -17,8 +18,9 @@
                         <tr>
                             <td>@x.Id</td>
                             <td>@x.Title</td>
+                            <td>@x.FType</td>
                             <td>@x.CreateTime</td>
-                            <td><a href="@x.Path" class="btn btn-success">右键另存为下载</a></td>
+                            <td><a href="~/uploads/@x.Path" class="btn btn-success">右键另存为下载</a></td>
                         </tr>
 
                     }
@@ -45,12 +47,12 @@
                         <tbody>
                             <tr>
                                 <td>
-                                    <input type="text" name="filename" class="form-control" placeholder="请输入源代码标题" />
+                                    <input type="text" name="filename" id="filename" class="form-control" placeholder="请输入源代码标题" />
                                 </td>
                             </tr>
                             <tr>
                                 <td>
-                                    <input type="file" name="file" formenctype="multipart/form-data" />
+                                    <input type="file" name="file" id="filetype" formenctype="multipart/form-data" />
                                 </td>
                             </tr>
                             <tr>
@@ -62,7 +64,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" id="send">提交</button>
+                <button type="button" class="btn btn-primary" id="sendbtn">提交</button>
             </div>
         </div>
     </div>
@@ -72,8 +74,21 @@
     $("#code").click(function () {
         $("#createcode").modal("show");
     });
-    $("#send").click(function () {
-        $("#codefrm").submit();
-
+    $("#sendbtn").click(function () {
+        var filename = $("#filename").val();
+        var filetype = $("#filetype").val();
+        function test(file_name) {
+            var result = /\.[^\.]+/.exec(file_name);
+            return result;
+        }
+        if (filename == "") {
+            alert("请输入文件名");
+        }
+        else if (test(filetype) != ".zip") {
+            alert("请输入文件后缀名为zip的文件");
+        }
+        else {
+            $("#codefrm").submit();
+        }
     });
 </script>

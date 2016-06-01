@@ -13,5 +13,7 @@ namespace EMWeb.ViewModels
         public string College { get; set; }
         public string Major { get; set; }
         public string CreateTime { get; set; }
+        public string Teacher { get; set; }
+        public string Subject { get; set; }
     }
 }

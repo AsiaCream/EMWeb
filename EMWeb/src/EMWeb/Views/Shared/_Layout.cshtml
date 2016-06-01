@@ -60,7 +60,7 @@
                         <li><a asp-action="SourceCode" asp-controller="Home">源代码</a></li>
                         <li><a asp-action="Thesis" asp-controller="Home">论文</a></li>
                         <li><a asp-action="Document" asp-controller="Home">文档</a></li>
-                        <li><a asp-action="MySubjectLog" asp-controller="Home">日志</a></li>
+                        <li><a asp-action="MySubjectLog" asp-controller="Home">选题日志</a></li>
                     }
                     @if (User.IsInRole("系主任"))
                     {
@@ -91,28 +91,21 @@
                         <li><a asp-action="StudentList" asp-controller="Admin">学生列表</a></li>
                     }
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">毕业设计 <span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <li><a asp-action="Subject" asp-controller="Admin">毕业设计选题</a></li>
-                            <li><a href="#">毕业设计报告</a></li>
-                            <li><a href="#">毕业设计论文</a></li>
-                            <li><a href="#">毕业设计源代码</a></li>
-                            <li><a href="#">毕业设计文档</a></li>
-                        </ul>
-                    </li>
-                    <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">公告 <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li><a asp-action="Announcement" asp-controller="Home">查看公告列表</a></li>
                         </ul>
                     </li>
                 </ul>
-                <form class="navbar-form navbar-left" role="search">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search...">
-                    </div>
-                    <button type="button" class="btn btn-info">搜索</button>
-                </form>
+                @if (User.IsInRole("系主任"))
+                {
+                    <form class="navbar-form navbar-left" role="search">
+                        <div class="form-group">
+                            <input type="text" class="form-control" placeholder="Search...">
+                        </div>
+                        <button type="button" class="btn btn-info">搜索</button>
+                    </form>
+                }
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">管理中心 <span class="caret"></span></a>

@@ -9,7 +9,7 @@ namespace EMWeb.ViewModels
     {
         public int Id { get; set; }
         public DateTime Time { get; set; }
-        public int SNumber { get; set; }
+        public int SNumber { get; set; }//题目Id
         public string STitle { get; set; }
         public string Teacher { get; set; }
         public DateTime DrawTime { get; set; }
