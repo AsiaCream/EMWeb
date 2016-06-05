@@ -123,6 +123,21 @@ namespace EMWeb.Controllers
                     .ToList();
                     ViewBag.Teacher = teacher;
                     ViewBag.Announcement = DB.Announcements.OrderByDescending(x => x.Id).First().CreateTime;
+                    //var Avatar = DB.Avatars
+                    //    .Where(x => x.UserId == User.Current.Id)
+                    //    .ToList();
+                    //if (Avatar.Count()!=0)
+                    //{
+                    //    ViewBag.Avatar = Avatar
+                    //        .OrderByDescending(x => x.Id)
+                    //        .First();
+                    //    return View(student);
+                    //}
+                    //else
+                    //{
+                    //    return View(student);
+                    //}
+                    ViewBag.Avatar = User.Current.AvatarId;
                     return View(student);
                 }
                 else
@@ -132,6 +147,24 @@ namespace EMWeb.Controllers
                         .Where(x => x.Id == teacherid)
                         .SingleOrDefault();
                     ViewBag.Announcement = DB.Announcements.OrderByDescending(x => x.Id).First().CreateTime;
+                    //ViewBag.Avatar = DB.Avatars
+                    //    .Where(x => x.UserId == User.Current.Id)
+                    //    .OrderByDescending(x => x.Id).First();
+                    //var Avatar = DB.Avatars
+                    //     .Where(x => x.UserId == User.Current.Id)
+                    //     .ToList();
+                    //if (Avatar.Count() != 0)
+                    //{
+                    //    ViewBag.Avatar = Avatar
+                    //        .OrderByDescending(x => x.Id)
+                    //        .First();
+                    //    return View(student);
+                    //}
+                    //else
+                    //{
+                    //    return View(student);
+                    //}
+                    ViewBag.Avatar = User.Current.AvatarId;
                     return View(student);
                 }
                 
@@ -387,6 +420,40 @@ namespace EMWeb.Controllers
                 .ToList();
             return View(ret);
         }
-        
+        [HttpPost]
+        public async Task<IActionResult> EditAvatar(long id,IFormFile avatar,User Model)
+        {
+            var user = DB.Users
+                .Include(x=>x.Avatar)
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            //file.SaveAs(".\\wwwroot\\uploads\\" + user.UserName + "\\images\\" + "Avatar" + ".jpg");
+            //var avatar = new Avatar
+            //{
+            //    Path = user.UserName + "\\images\\" + "Avatar" + ".jpg",
+            //    UserId = User.Current.Id,
+
+            //};
+            if (avatar != null)
+            {
+                try
+                {
+                    DB.Files.Remove(DB.Files.Single(x => x.Id == user.AvatarId));
+                }
+                catch { }
+                var file = new CodeComb.AspNet.Upload.Models.File
+                {
+                    Bytes = await avatar.ReadAllBytesAsync(),
+                    ContentLength = avatar.Length,
+                    ContentType = avatar.ContentType,
+                    FileName = avatar.GetFileName(),
+                    Time = DateTime.Now
+                };
+                DB.Files.Add(file);
+                user.AvatarId = file.Id;
+            }
+            DB.SaveChanges();
+            return RedirectToAction("Center", "Home");
+        }
     }
 }

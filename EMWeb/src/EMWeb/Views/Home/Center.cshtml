@@ -5,7 +5,14 @@
             <div class="col-md-3">
                 <div class="caption">
                     <div class="thumbnail">
-                        <a href="#" id="editAvatar"><img src="~/images/person.png" /></a>
+                        @if (ViewBag.Avatar == null)
+                        {
+                            <a href="#"><img src="~/images/person.png" width="150" height="100" alt="无法显示图片" /></a>
+                        }
+                        else
+                        {
+                            <a href="#"><img src="~/file/download/@ViewBag.Avatar" width="150" height="100" alt="无法显示图片" /></a>
+                        }
                     </div>
                 </div>
                 <table class="table">
@@ -34,31 +41,38 @@
             <div class="col-md-8 col-md-offset-1">
                 <h2>@User.Current.UserName &nbsp;<a asp-action="Announcement" asp-controller="Home" style="font-size:20px;">最新公告:@ViewBag.Announcement</a></h2>
                 <hr />
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>姓名</th>
-                            <td>@Model.Name</td>
-                        </tr>
-                        <tr>
-                            <th>学号</th>
-                            <td>@Model.Number</td>
-                        </tr>
-                        <tr>
-                            <th>专业</th>
-                            <td>@Model.Major.Title</td>
-                        </tr>
-                        <tr>
-                            <th>学院</th>
-                            <td>@Model.College.Title</td>
-                        </tr>
-                        <tr>
-                            <th>注册时间</th>
-                            <td>@Model.CreateTime</td>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
+                <form asp-action="EditAvatar" asp-controler="Home" asp-route-id="@User.Current.Id" method="post" enctype="multipart/form-data" id="editavatar">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>姓名</th>
+                                <td>@Model.Name</td>
+                            </tr>
+                            <tr>
+                                <th>学号</th>
+                                <td>@Model.Number</td>
+                            </tr>
+                            <tr>
+                                <th>专业</th>
+                                <td>@Model.Major.Title</td>
+                            </tr>
+                            <tr>
+                                <th>学院</th>
+                                <td>@Model.College.Title</td>
+                            </tr>
+                            <tr>
+                                <th>注册时间</th>
+                                <td>@Model.CreateTime</td>
+                            </tr>
+                            <tr>
+                                <th>修改头像</th>
+                                <td><input type="file" name="avatar" id="filetype" formenctype="multipart/form-data" /></td>
+                            </tr>
+                        </thead>
+                    </table>
+                    </form>
+                <button id="avatarbtn" class="btn btn-primary form-group">提交</button>
+             </div>
         </div>
     </div>
 
@@ -130,6 +144,19 @@
                     alert("添加失败");
                 }
             });
+        }
+    });
+    $("#avatarbtn").click(function () {
+        var filetype = $("#filetype").val();
+        function test(file_name) {
+            var result = /\.[^\.]+/.exec(file_name);
+            return result;
+        }
+        if (test(filetype) != ".jpg") {
+            alert("请输入文件后缀名为jpg的图片");
+        }
+        else {
+            $("#editavatar").submit();
         }
     });
 </script>

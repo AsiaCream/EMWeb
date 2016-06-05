@@ -5,7 +5,7 @@
             <div class="col-md-3">
                 <div class="caption">
                     <div class="thumbnail">
-                        <a href="#"><img src="~/images/person.png" /></a>
+                        <a href="#"><img src="~/images/person.png" width="150" height="100" alt="无法显示图片"/></a>
                     </div>
                 </div>
                 <table class="table">
@@ -38,30 +38,30 @@
                     <h2>欢迎指导老师 @User.Current.UserName&nbsp;<a asp-action="Announcement" asp-controller="Home" style="font-size:20px;">最新公告</a></h2>
                 }
                 <hr />
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>姓名</th>
-                            <td>@Model.Name</td>
-                        </tr>
-                        <tr>
-                            <th>编号</th>
-                            <td>@Model.Number</td>
-                        </tr>
-                        <tr>
-                            <th>专业</th>
-                            <td>@Model.Major.Title</td>
-                        </tr>
-                        <tr>
-                            <th>学院</th>
-                            <td>@Model.College.Title</td>
-                        </tr>
-                        <tr>
-                            <th>添加时间</th>
-                            <td>@Model.CreateTime</td>
-                        </tr>
-                    </thead>
-                </table>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>姓名</th>
+                                <td>@Model.Name</td>
+                            </tr>
+                            <tr>
+                                <th>编号</th>
+                                <td>@Model.Number</td>
+                            </tr>
+                            <tr>
+                                <th>专业</th>
+                                <td>@Model.Major.Title</td>
+                            </tr>
+                            <tr>
+                                <th>学院</th>
+                                <td>@Model.College.Title</td>
+                            </tr>
+                            <tr>
+                                <th>添加时间</th>
+                                <td>@Model.CreateTime</td>
+                            </tr>
+                        </thead>
+                    </table>
             </div>
         </div>
     </div>
