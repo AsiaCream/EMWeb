@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using CodeComb.AspNet.Upload;
+using CodeComb.AspNet.Upload.Models;
 
 namespace EMWeb.Models
 {
-    public class EMContext:IdentityDbContext<User,IdentityRole<long>,long>
+    public class EMContext:IdentityDbContext<User,IdentityRole<long>,long>,IFileUploadDbContext
     {
         public DbSet<FileInfo> FinleInfos { get; set; }
         public DbSet<Teacher> Teachers { get; set; }
@@ -17,6 +19,7 @@ namespace EMWeb.Models
         public DbSet<Subject> Subjects { get; set; }
         public DbSet<Log> Logs { get; set; }
         public DbSet<Announcement> Announcements { get; set; }
+        public DbSet<File> Files { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -54,7 +57,6 @@ namespace EMWeb.Models
             {
                 e.HasIndex(x => x.Id);
             });
-
         }
     }
 }
