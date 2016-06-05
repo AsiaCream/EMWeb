@@ -34,6 +34,8 @@ namespace EMWeb
             })
                 .AddEntityFrameworkStores<EMContext,long>()
                 .AddDefaultTokenProviders();
+            services.AddFileUpload()
+                .AddEntityFrameworkStorage<EMContext>();
             services.AddMvc();
             services.AddSmartUser<User,long>();
 
@@ -48,6 +50,7 @@ namespace EMWeb
             loggerFactory.AddDebug();
             app.UseStaticFiles();
             app.UseIdentity();
+            app.UseFileUpload();
             app.UseMvc(x => x.MapRoute("default", "{controller=Home}/{action=Index}/{id?}"));
             await SampleData.InitDB(app.ApplicationServices);
         }
