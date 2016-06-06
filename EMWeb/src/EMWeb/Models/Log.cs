@@ -44,6 +44,7 @@ namespace EMWeb.Models
         删除老师,
         删除系主任,
         添加系统公告,
+        修改系统公告,
     }
     public class Log
     {
@@ -55,7 +56,7 @@ namespace EMWeb.Models
 
         public DateTime Time { get; set; }//操作时间
 
-        public int Number { get; set; }
+        public int Number { get; set; }//目标ID
 
         [ForeignKey("User")]
         public long UserId { get; set; }
