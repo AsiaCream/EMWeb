@@ -11,30 +11,33 @@
                         }
                         else
                         {
-                            <a href="#"><img src="~/file/download/@ViewBag.Avatar" width="150" height="100" alt="无法显示图片" /></a>
+                            <a href="#"><img src="~/file/download/@ViewBag.Avatar" style="width:100%" alt="无法显示图片" /></a>
                         }
                     </div>
                 </div>
                 <table class="table">
                     <tbody>
-                        @if (Model.State == State.未锁定)
+                        @if (Model.State == State.未锁定&&Model.IsGraduate==IsGraduate.否)
                         {
                             <tr>
                                 <td><a class="btn btn-primary form-control" id="addSubject">添加毕业设计题目</a></td>
                             </tr>
                         }
-                        <tr>
-                            <td><a asp-action="Report" asp-controller="Home" class="btn btn-primary form-control">查看毕业设计报告</a></td>
-                        </tr>
-                        <tr>
-                            <td><a asp-action="Thesis" asp-controller="Home" class="btn btn-primary form-control">查看毕业设计论文</a></td>
-                        </tr>
-                        <tr>
-                            <td><a asp-action="SourceCode" asp-controller="Home" class="btn btn-primary form-control">查看毕业设计代码</a></td>
-                        </tr>
-                        <tr>
-                            <td><a asp-action="Document" asp-controller="Home" class="btn btn-primary form-control">毕业设计相关文件</a></td>
-                        </tr>
+                        @if (Model.IsGraduate == IsGraduate.否)
+                        {
+                            <tr>
+                                <td><a asp-action="Report" asp-controller="Home" class="btn btn-primary form-control">查看毕业设计报告</a></td>
+                            </tr>
+                            <tr>
+                                <td><a asp-action="Thesis" asp-controller="Home" class="btn btn-primary form-control">查看毕业设计论文</a></td>
+                            </tr>
+                            <tr>
+                                <td><a asp-action="SourceCode" asp-controller="Home" class="btn btn-primary form-control">查看毕业设计代码</a></td>
+                            </tr>
+                            <tr>
+                                <td><a asp-action="Document" asp-controller="Home" class="btn btn-primary form-control">毕业设计相关文件</a></td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
             </div>

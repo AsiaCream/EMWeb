@@ -8,9 +8,14 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace EMWeb.Models
 {
     public enum State
-    {
+    {//题目是否锁定
         未锁定,
         锁定
+    }
+    public enum IsGraduate
+    {//是否毕业
+        是,
+        否
     }
     public class Student
     {
@@ -25,6 +30,8 @@ namespace EMWeb.Models
         public DateTime CreateTime { get; set; }
 
         public State State { get; set; }
+
+        public IsGraduate IsGraduate { get; set; }
 
         [ForeignKey("User")]
         public long UserId { get; set; }

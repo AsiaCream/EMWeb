@@ -88,6 +88,7 @@ namespace EMWeb.Controllers
                             MajorId = maj.Id,
                             CreateTime = DateTime.Now,
                             State = State.未锁定,
+                            IsGraduate=IsGraduate.否,
                         };
                         DB.Students.Add(student);
                         DB.SaveChanges();
@@ -96,7 +97,6 @@ namespace EMWeb.Controllers
                         Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username + "\\document");
                         Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username + "\\thesis");
                         Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username + "\\sourcecode");
-                        //Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username + "\\images");
                         return Content("success");
                     }
                     else

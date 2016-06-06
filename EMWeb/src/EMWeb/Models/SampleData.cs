@@ -76,6 +76,7 @@ namespace EMWeb.Models
                     UserId = guest.Id,
                     CollegeId = college.Id,
                     MajorId = major.Id,
+                    IsGraduate=IsGraduate.否,
                 };
                 DB.Students.Add(studentdu);
                 DB.SaveChanges();

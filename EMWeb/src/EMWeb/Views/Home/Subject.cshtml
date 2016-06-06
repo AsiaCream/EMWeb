@@ -15,7 +15,7 @@
             @foreach (var x in Model)
             {
                 <tr>
-                    <td>@x.Title</td>
+                    <td id="td-@x.Id">@x.Title</td>
                     <td>@x.Teacher.Name</td>
                     <td>@x.Student.Name</td>
                     <td>@x.PostTime</td>

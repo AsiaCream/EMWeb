@@ -16,6 +16,9 @@ namespace EMWeb.Controllers
     {
         public IActionResult Index()
         {
+            ViewBag.GraduateCount = DB.Students
+                .Where(x => x.IsGraduate == IsGraduate.是)
+                .Count();
             return View();
         }
         [HttpGet]

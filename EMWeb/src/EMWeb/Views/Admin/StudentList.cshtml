@@ -64,7 +64,7 @@
                         <td>@x.College</td>
                         <td>@x.Major</td>
                         <td>@x.CreateTime</td>
-                        <td>@x.Subject</td>
+                        <td id="td-@x.Id">@x.Subject</td>
                         <td>@x.Teacher</td>
                         <td><a asp-action="StudentDetails" asp-controller="Admin" asp-route-id="@x.Id">查看毕业设计相关文件</a></td>
                     </tr>

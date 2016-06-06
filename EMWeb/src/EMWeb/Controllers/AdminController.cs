@@ -83,7 +83,7 @@ namespace EMWeb.Controllers
                 var subject = DB.Subjects
                     .Include(x=>x.Teacher)
                     .Include(x=>x.Student)
-                    .Where(x=>x.Student.MajorId==teacher.MajorId)
+                    .Where(x=>x.Student.MajorId==teacher.MajorId&&x.Student.IsGraduate==IsGraduate.否)
                 .OrderBy(x => x.Id)
                 .ToList();
                 var ret = new List<MajorStudent>();
@@ -221,7 +221,7 @@ namespace EMWeb.Controllers
                 //指导老师查看选择了自己的学生
                 var student = DB.Subjects
                     .Include(x => x.Student)
-                    .Where(x => x.TeacherId == teacher.Id)
+                    .Where(x => x.TeacherId == teacher.Id && x.Student.IsGraduate == IsGraduate.否 && x.Student.State == State.锁定&&x.Draw==Draw.通过)
                     .OrderBy(x=>x.StudentId)
                     .ToList();
                 var ret = new List<StudentList>();
@@ -246,7 +246,7 @@ namespace EMWeb.Controllers
                 //系主任查看自己专业相关的学生
                 var student = DB.Subjects
                     .Include(x => x.Student)
-                    .Where(x=>x.Student.MajorId==teacher.MajorId)
+                    .Where(x=>x.Student.MajorId==teacher.MajorId&&x.Student.IsGraduate==IsGraduate.否&&x.Student.State==State.锁定&&x.Draw==Draw.通过)
                     .OrderBy(x => x.StudentId)
                     .ToList();
                 var ret = new List<StudentList>();
@@ -294,6 +294,43 @@ namespace EMWeb.Controllers
                     .Where(x => x.StudentId == id)
                     .ToList();
                 return View(ret);
+            }
+        }
+        [HttpPost]
+        [AnyRoles("系主任,指导老师")]
+        public IActionResult EditSubject(int id,string title)
+        {
+            var old = DB.Subjects
+                .Where(x => x.Title == title)
+                .SingleOrDefault();
+            if (old != null)
+            {
+                return Content("error");
+            }
+            else
+            {
+                var subject = DB.Subjects
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+                if (subject == null)
+                {
+                    return RedirectToAction("Error", "Home");
+                }
+                else
+                {
+                    subject.Title = title;
+                    var log = new Log
+                    {
+                        Operation = Operation.修改毕业设计题目,
+                        Roles = Roles.老师,
+                        Time = DateTime.Now,
+                        Number = id,
+                        UserId = User.Current.Id,
+                    };
+                    DB.Logs.Add(log);
+                    DB.SaveChanges();
+                    return Content("success");
+                }
             }
         }
     }
