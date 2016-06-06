@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<MajorStudent>
 <div class="container">
-    <h2 style="margin:0;padding:0;" class="text-center">当前毕业设计选择情况</h2>
+    <h3 style="margin:0;padding:0;font-family:微软雅黑;" class="text-center">当前毕业设计选择情况</h3>
     <table class="table table-hover table-striped">
         <thead>
             <tr>
@@ -18,7 +18,7 @@
             @foreach (var x in Model)
             {
                 <tr id="table-tr-@x.Id">
-                    <td>@x.SubjectTitle</td>
+                    <td id="td-@x.Id">@x.SubjectTitle</td>
                     <td>@x.StudentName</td>
                     <td>@x.TeacherName</td>
                     <td>@x.PostTime</td>
@@ -27,13 +27,43 @@
                     <td>@x.Major</td>
                     @if (x.Draw == Draw.待审核.ToString()&& x.TeacherName == ViewBag.Teacher.Name)
                     {
-                     <td><a href="javascript:pass(@x.Id)" class="btn btn-success btn-sm">审核通过</a><a href="javascript:failure(@x.Id)" class="btn btn-danger btn-sm">审核不通过</a></td>
+                     <td><a href="javascript:pass(@x.Id)" class="btn btn-success btn-sm">审核通过</a><a href="javascript:failure(@x.Id)" class="btn btn-danger btn-sm">审核不通过</a><a href="javascript:edit(@x.Id)" class="btn btn-warning btn-sm">修改题目</a></td>
                     }
                 </tr>
             }
         </tbody>
     </table>
     @Html.MakePager("pager-item","","pager")
+</div>
+<div class="modal fade" id="subjectEditModal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    修改题目
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <input type="text" name="title" id="editTitle" placeholder="请填写修改题目名称" class="form-control" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger"
+                        data-dismiss="modal">
+                    关闭
+                </button>
+                <button type="button" id="sendEdit" class="btn btn-primary">
+                    修改
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
 </div>
 <script type="text/javascript">
     function pass(id) {
@@ -43,6 +73,7 @@
                 if (data == "success") {
                     alert("审核成功");
                     $("#table-tr-" + id).remove();
+                    window.location.reload();
                 }
                 else {
                     alert("操作失败");
@@ -57,12 +88,38 @@
                 if (data == "success") {
                     alert("操作成功");
                     $("#table-tr-" + id).remove();
+                    window.location.reload();
                 }
                 else {
                     alert("操作失败");
                 }
             });
         }
+    }
+    function edit(id) {
+        $("#subjectEditModal").find("input[name='title']").val($("#td-" + id).html());
+        $("#subjectEditModal").modal("show");
+        $("#sendEdit").click(function () {
+            var title = $("#editTitle").val();
+            if (title == "") {
+                alert("请填写题目名称");
+            }
+            else {
+                $.post("/Admin/EditSubject", { id: id, title: title }, function (data) {
+                    if (data == "success") {
+                        alert("修改成功...");
+                        window.location.reload();
+                    }
+                    else if (data == "error") {
+                        alert("题目：" + title + " 已经存在，请更换题目提交");
+                    }
+                    else {
+                        alert("修改失败...");
+                    }
+                });
+            }
+        });
+
     }
 </script>
 
