@@ -1,0 +1,26 @@
+﻿@model Announcement
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 style="margin:0;padding:0;font-family:微软雅黑;" class="text-center">公告详细信息</h3>
+            <div style="height:20px;"></div>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">第 @Model.Id 条公告</h3>
+                </div>
+                <div class="panel-body">
+                    公告标题：@Model.Title <br />
+                    公告内容：@Model.Content
+                </div>
+                <div class="panel-footer">
+                    <span class="badge">发布时间： @Model.CreateTime</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <a asp-action="Announcement" asp-controller="Home" class="btn btn-success">返回上一页</a>
+        </div>
+    </div>
+</div>

@@ -357,7 +357,66 @@ namespace EMWeb.Controllers
                 return Content("success");
             }
         }
-
-        
+        [HttpPost]
+        public IActionResult CreateAnnouncement(Announcement announcement)
+        {
+            DB.Announcements.Add(announcement);
+            announcement.CreateTime = DateTime.Now;
+            DB.SaveChanges();
+            var log = new Log
+            {
+                Operation = Operation.添加系统公告,
+                Roles = Roles.系主任,
+                Time = DateTime.Now,
+                Number = announcement.Id,
+                UserId = User.Current.Id,
+            };
+            DB.Logs.Add(log);
+            DB.SaveChanges();
+            return Content("success");
+        }
+        [HttpPost]
+        public IActionResult EditAnnouncement(int id,Announcement announcement)
+        {
+            var old = DB.Announcements
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            if (old != null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            else
+            {
+                old.Title = announcement.Title;
+                old.Content = announcement.Content;
+                old.CreateTime = DateTime.Now;
+                var log = new Log
+                {
+                    Operation = Operation.修改系统公告,
+                    Roles = Roles.系主任,
+                    Time=DateTime.Now,
+                    Number = id,
+                    UserId = User.Current.Id,
+                };
+                DB.Logs.Add(log);
+                DB.SaveChanges();
+                return Content("success");
+            }
+        }
+        [HttpGet]
+        public IActionResult AnnouncementDetails(int id)
+        {
+            var announce = DB.Announcements
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            if (announce == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            else
+            {
+                return View(announce);
+            }
+        }
     }
 }
