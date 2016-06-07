@@ -362,6 +362,9 @@ namespace EMWeb.Controllers
         {
             DB.Announcements.Add(announcement);
             announcement.CreateTime = DateTime.Now;
+            announcement.MajorId = DB.Teachers
+                .Where(x => x.UserId == User.Current.Id)
+                .SingleOrDefault().MajorId;
             DB.SaveChanges();
             var log = new Log
             {
@@ -375,13 +378,39 @@ namespace EMWeb.Controllers
             DB.SaveChanges();
             return Content("success");
         }
+        /// <summary>
+        /// 渲染公告编辑页面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public IActionResult EditAnnouncement(int id)
+        {
+            var announcement = DB.Announcements
+                .Where(x => x.Id == id&&x.MajorId==DB.Teachers.Where(y=>y.UserId==User.Current.Id).SingleOrDefault().MajorId)
+                .SingleOrDefault();
+            if (announcement == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            else
+            {
+                return View(announcement);
+            }
+        }
+        /// <summary>
+        /// 执行公告修改页面
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="announcement"></param>
+        /// <returns></returns>
         [HttpPost]
         public IActionResult EditAnnouncement(int id,Announcement announcement)
         {
             var old = DB.Announcements
-                .Where(x => x.Id == id)
+                .Where(x => x.Id == id&&x.MajorId==DB.Teachers.Where(y=>y.UserId==User.Current.Id).SingleOrDefault().MajorId)
                 .SingleOrDefault();
-            if (old != null)
+            if (old == null)
             {
                 return RedirectToAction("Error", "Home");
             }
@@ -400,22 +429,7 @@ namespace EMWeb.Controllers
                 };
                 DB.Logs.Add(log);
                 DB.SaveChanges();
-                return Content("success");
-            }
-        }
-        [HttpGet]
-        public IActionResult AnnouncementDetails(int id)
-        {
-            var announce = DB.Announcements
-                .Where(x => x.Id == id)
-                .SingleOrDefault();
-            if (announce == null)
-            {
-                return RedirectToAction("Error", "Home");
-            }
-            else
-            {
-                return View(announce);
+                return RedirectToAction("AnnouncementDetails", "Home",new { id=id});
             }
         }
     }

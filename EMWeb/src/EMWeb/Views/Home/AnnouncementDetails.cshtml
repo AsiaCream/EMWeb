@@ -2,11 +2,11 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h3 style="margin:0;padding:0;font-family:微软雅黑;" class="text-center">公告详细信息</h3>
+            <h3 style="margin:0;padding:0;font-family:微软雅黑;" class="text-center">公告详细页面</h3>
             <div style="height:20px;"></div>
             <div class="panel panel-success">
                 <div class="panel-heading">
-                    <h3 class="panel-title">第 @Model.Id 条公告</h3>
+                    <h3 class="panel-title">公告</h3>
                 </div>
                 <div class="panel-body">
                     公告标题：@Model.Title <br />
@@ -20,7 +20,9 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-            <a asp-action="Announcement" asp-controller="Home" class="btn btn-success">返回上一页</a>
+            <a asp-action="Announcement" asp-controller="Home" class="btn btn-success">返回公告列表页面</a>
+            @if (User.IsInRole("系主任"))
+            {<a asp-action="EditAnnouncement" asp-controller="System" asp-route-id="@Model.Id" class="btn btn-warning">修改</a>}
         </div>
     </div>
 </div>

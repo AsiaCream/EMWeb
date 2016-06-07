@@ -1,0 +1,43 @@
+﻿@model Announcement
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h3 style="margin:0;padding:0;font-family:微软雅黑;" class="text-center">公告修改页面</h3>
+            <div style="height:20px;"></div>
+            <div class="panel panel-success">
+                <div class="panel-heading">
+                    <h3 class="panel-title">公告</h3>
+                </div>
+                <form asp-action="EditAnnouncement" asp-controller="System" asp-route-id="@Model.Id" method="post" id="editAnnouncementfrm">
+                    <div class="panel-body">
+                        公告标题：<input type="text" value="@Model.Title" name="title" id="title" /> <br /><br />
+                        公告内容：<textarea name="content" id="content">@Model.Content</textarea>
+                    </div>
+                </form>
+                <div class="panel-footer">
+                    <span class="badge">发布时间： @Model.CreateTime</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <a asp-action="Announcement" asp-controller="Home" class="btn btn-success">返回公告列表页面</a>
+            <a href="#" id="sendEditAnnouncement" class="btn btn-info">确定修改</a>
+        </div>
+    </div>
+</div>
+<script src="~/scripts/jquery-2.1.1.js"></script>
+<script type="text/javascript">
+    $("#sendEditAnnouncement").click(function () {
+        var title = $("#title").val();
+        var content = $("#content").val();
+        if (title == "" || content == "") {
+            alert("请正确输入修改信息");
+        }
+        else {
+            $("#editAnnouncementfrm").submit();
+
+        }
+    });
+</script>

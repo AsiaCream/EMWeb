@@ -126,20 +126,6 @@ namespace EMWeb.Controllers
                     .ToList();
                     ViewBag.Teacher = teacher;
                     ViewBag.Announcement = DB.Announcements.OrderByDescending(x => x.Id).First().CreateTime;
-                    //var Avatar = DB.Avatars
-                    //    .Where(x => x.UserId == User.Current.Id)
-                    //    .ToList();
-                    //if (Avatar.Count()!=0)
-                    //{
-                    //    ViewBag.Avatar = Avatar
-                    //        .OrderByDescending(x => x.Id)
-                    //        .First();
-                    //    return View(student);
-                    //}
-                    //else
-                    //{
-                    //    return View(student);
-                    //}
                     ViewBag.Avatar = User.Current.AvatarId;
                     return View(student);
                 }
@@ -150,23 +136,6 @@ namespace EMWeb.Controllers
                         .Where(x => x.Id == teacherid)
                         .SingleOrDefault();
                     ViewBag.Announcement = DB.Announcements.OrderByDescending(x => x.Id).First().CreateTime;
-                    //ViewBag.Avatar = DB.Avatars
-                    //    .Where(x => x.UserId == User.Current.Id)
-                    //    .OrderByDescending(x => x.Id).First();
-                    //var Avatar = DB.Avatars
-                    //     .Where(x => x.UserId == User.Current.Id)
-                    //     .ToList();
-                    //if (Avatar.Count() != 0)
-                    //{
-                    //    ViewBag.Avatar = Avatar
-                    //        .OrderByDescending(x => x.Id)
-                    //        .First();
-                    //    return View(student);
-                    //}
-                    //else
-                    //{
-                    //    return View(student);
-                    //}
                     ViewBag.Avatar = User.Current.AvatarId;
                     return View(student);
                 }
@@ -418,10 +387,29 @@ namespace EMWeb.Controllers
         [HttpGet]
         public IActionResult Announcement()
         {
-            var ret = DB.Announcements
+            var student = DB.Students
+                .Where(x => x.UserId == User.Current.Id)
+                .SingleOrDefault();
+            if (student != null)
+            {
+                var ret = DB.Announcements
+                    .Where(x=>x.MajorId==student.MajorId&&x.CreateTime.Year==DateTime.Now.Year)
                 .OrderByDescending(x => x.CreateTime)
                 .ToList();
-            return View(ret);
+                return View(ret);
+            }
+            else
+            {
+                var teacher = DB.Teachers
+                    .Where(x => x.UserId == User.Current.Id)
+                    .SingleOrDefault();
+                var ret = DB.Announcements
+                    .Where(x => x.MajorId == teacher.MajorId && x.CreateTime.Year == DateTime.Now.Year)
+                .OrderByDescending(x => x.CreateTime)
+                .ToList();
+                return View(ret);
+            }
+            
         }
         [HttpPost]
         public async Task<IActionResult> EditAvatar(long id,IFormFile avatar,User Model)
@@ -430,13 +418,6 @@ namespace EMWeb.Controllers
                 .Include(x=>x.Avatar)
                 .Where(x => x.Id == id)
                 .SingleOrDefault();
-            //file.SaveAs(".\\wwwroot\\uploads\\" + user.UserName + "\\images\\" + "Avatar" + ".jpg");
-            //var avatar = new Avatar
-            //{
-            //    Path = user.UserName + "\\images\\" + "Avatar" + ".jpg",
-            //    UserId = User.Current.Id,
-
-            //};
             if (avatar != null)
             {
                 try
@@ -457,6 +438,21 @@ namespace EMWeb.Controllers
             }
             DB.SaveChanges();
             return RedirectToAction("Center", "Home");
+        }
+        [HttpGet]
+        public IActionResult AnnouncementDetails(int id)
+        {
+            var announce = DB.Announcements
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            if (announce == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            else
+            {
+                return View(announce);
+            }
         }
     }
 }
