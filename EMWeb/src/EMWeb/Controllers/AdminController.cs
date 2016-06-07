@@ -333,5 +333,32 @@ namespace EMWeb.Controllers
                 }
             }
         }
+        [HttpGet]
+        [AnyRoles("系主任,指导老师")]
+        public IActionResult GraduateStudentList()
+        {
+            var student = DB.Subjects
+                .Include(x => x.Student)
+                .Include(x => x.Teacher)
+                .Where(x => x.Student.IsGraduate == IsGraduate.是 && x.Student.MajorId == DB.Teachers.Where(y => y.UserId == User.Current.Id).SingleOrDefault().MajorId)
+                .OrderByDescending(x=>x.Student.Number)
+                .ToList();
+            var ret = new List<StudentList>();
+            foreach (var x in student)
+            {
+                ret.Add(new StudentList
+                {
+                    Id = x.Student.Id,
+                    Name = x.Student.Name,
+                    StudentNumber = x.Student.Number.ToString(),
+                    College = DB.Colleges.Where(y => y.Id == x.Student.CollegeId).SingleOrDefault().Title,
+                    Major = DB.Majors.Where(y => y.Id == x.Student.MajorId).SingleOrDefault().Title,
+                    CreateTime = x.Student.CreateTime.ToString(),
+                    Teacher = x.Teacher.Name,
+                    Subject = x.Title,
+                });
+            }
+            return PagedView(ret,50);
+        }
     }
 }

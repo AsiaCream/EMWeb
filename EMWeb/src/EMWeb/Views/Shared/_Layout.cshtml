@@ -84,11 +84,12 @@
                                 <li><a asp-action="StudentLog" asp-controller="System">学生日志</a></li>
                             </ul>
                         </li>
-                        <li><a asp-action="StudentList" asp-controller="Admin">学生列表</a></li>
+                        <li><a asp-action="StudentList" asp-controller="Admin">当前学生列表</a></li>
+                        <li><a asp-action="GraduateStudentList" asp-controller="Admin">已毕业学生列表</a></li>
                     }
                     @if (User.IsInRole("指导老师"))
                     {
-                        <li><a asp-action="StudentList" asp-controller="Admin">学生列表</a></li>
+                        <li><a asp-action="StudentList" asp-controller="Admin">当前学生列表</a></li>
                     }
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">公告 <span class="caret"></span></a>
