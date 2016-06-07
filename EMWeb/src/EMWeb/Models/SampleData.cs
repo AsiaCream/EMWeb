@@ -45,6 +45,7 @@ namespace EMWeb.Models
                     Title = "请提交毕业设计题目",
                     Content = "请提交毕业设计题目",
                     CreateTime = DateTime.Now,
+                    MajorId=major.Id,
                 };
                 DB.Announcements.Add(announcement);
                 DB.SaveChanges();
