@@ -237,6 +237,7 @@ namespace EMWeb.Controllers
                         CreateTime = x.Student.CreateTime.ToString(),
                         Teacher=teacher.Name,
                         Subject=x.Title,
+                        SubjectNumber=x.Id,
                     });
                 }
                 return View(ret);
@@ -261,7 +262,7 @@ namespace EMWeb.Controllers
                         CreateTime=x.Student.CreateTime.ToString(),
                         Teacher=DB.Teachers.Where(y=>y.Id==x.TeacherId).SingleOrDefault().Name,
                         Subject=x.Title,
-                        
+                        SubjectNumber = x.Id,
                     });
                 }
                 return View(ret);
@@ -380,6 +381,118 @@ namespace EMWeb.Controllers
             {
                 student.IsGraduate = IsGraduate.是;
                 student.GraduateTime = DateTime.Now;
+                DB.SaveChanges();
+                return Content("success");
+            }
+        }
+        [AnyRoles("系主任,指导老师")]
+        [HttpGet]
+        public IActionResult StudentScore()
+        {
+            var teacher = DB.Teachers
+                .Include(x=>x.Major)
+                    .Where(x => x.UserId == User.Current.Id)
+                    .SingleOrDefault();
+            var subject = DB.Results
+                .Include(x=>x.Subject)
+                .Include(x=>x.Subject.Student)
+                .Include(x=>x.Subject.Teacher)
+                .Include(x=>x.Teacher)
+                .Where(x => x.Teacher.MajorId == teacher.MajorId)
+                .ToList();
+                var ret = new List<StudentList>();
+                foreach (var x in subject)
+                {
+                if (x.Score.ToString()=="")
+                {
+                    x.Score = 0;
+                }
+                    ret.Add(new StudentList
+                    {
+                        Id = x.Subject.StudentId,
+                        Name = x.Subject.Student.Name,
+                        StudentNumber = x.Subject.Student.Number.ToString(),
+                        College = DB.Colleges.Where(y => y.Id == x.Subject.Student.CollegeId).SingleOrDefault().Title,
+                        Major = DB.Majors.Where(y => y.Id == x.Subject.Student.MajorId).SingleOrDefault().Title,
+                        CreateTime = x.CreateTime.ToString(),
+                        Teacher = x.Subject.Teacher.Name,
+                        Subject = x.Subject.Title,
+                        SubjectNumber = x.Subject.Id,
+                        Result=x.Score.ToString(),
+                        ScoreTeacher=x.Teacher.Name,
+                    });
+                }
+                return View(ret.OrderBy(x=>x.StudentNumber).ToList());
+        }
+        [AnyRoles("系主任,指导老师")]
+        [HttpGet]
+        public IActionResult WaitScore()
+        {
+            var teacher = DB.Teachers
+                .Where(x => x.UserId == User.Current.Id)
+                .SingleOrDefault();
+            var student = DB.Subjects
+                    .Include(x => x.Student)
+                    .Where(x => x.Student.MajorId == teacher.MajorId && x.Student.IsGraduate == IsGraduate.否 && x.Student.State == State.锁定 && x.Draw == Draw.通过)
+                    .OrderBy(x => x.StudentId)
+                    .ToList();
+            var ret = new List<StudentList>();
+            foreach (var x in student)
+            {
+                ret.Add(new StudentList
+                {
+                    Id = x.Student.Id,
+                    Name = x.Student.Name,
+                    StudentNumber = x.Student.Number.ToString(),
+                    College = DB.Colleges.Where(y => y.Id == x.Student.CollegeId).SingleOrDefault().Title,
+                    Major = DB.Majors.Where(y => y.Id == x.Student.MajorId).SingleOrDefault().Title,
+                    CreateTime = x.Student.CreateTime.ToString(),
+                    Teacher = DB.Teachers.Where(y => y.Id == x.TeacherId).SingleOrDefault().Name,
+                    Subject = x.Title,
+                    SubjectNumber = x.Id,
+                });
+            }
+            return View(ret);
+        }
+        [AnyRoles("系主任,指导老师")]
+        [HttpPost]
+        public IActionResult CreateScore(int id,double score)
+        {
+            var teacher = DB.Teachers
+                .Where(x => x.UserId == User.Current.Id)
+                .SingleOrDefault();
+            var subject = DB.Subjects
+                .Include(x=>x.Student)
+                .Include(x=>x.Teacher)
+                .Where(x => x.Id == id&&x.Student.IsGraduate==IsGraduate.否&&x.Draw==Draw.通过)
+                .SingleOrDefault();
+            var oldresult = DB.Results
+                .Include(x => x.Teacher)
+                .Where(x => x.TeacherId == teacher.Id)
+                .SingleOrDefault();
+            if (oldresult!=null)
+            {
+                return Content("您已经进行过了评分工作");
+            }
+            else
+            {
+                var result = new Result
+                {
+                    Score = score,
+                    SubjectId = subject.Id,
+                    TeacherId = teacher.Id,
+                    CreateTime=DateTime.Now,
+                };
+                DB.Results.Add(result);
+                DB.SaveChanges();
+                var log = DB.Logs.Add(new Log
+                {
+                    Operation = Operation.评分,
+                    Roles = Roles.老师,
+                    Number = subject.Id,
+                    Time = DateTime.Now,
+                    UserId = User.Current.Id,
+                });
                 DB.SaveChanges();
                 return Content("success");
             }

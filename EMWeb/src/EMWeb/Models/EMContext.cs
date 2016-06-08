@@ -20,6 +20,7 @@ namespace EMWeb.Models
         public DbSet<Log> Logs { get; set; }
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<File> Files { get; set; }
+        public DbSet<Result> Results { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -54,6 +55,10 @@ namespace EMWeb.Models
                 e.HasIndex(x => x.Id);
             });
             builder.Entity<Announcement>(e =>
+            {
+                e.HasIndex(x => x.Id);
+            });
+            builder.Entity<Result>(e =>
             {
                 e.HasIndex(x => x.Id);
             });

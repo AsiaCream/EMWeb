@@ -1,0 +1,83 @@
+﻿@model IEnumerable<StudentList>
+    <div class="container">
+        <h3 style="margin:0;padding:0;font-family:微软雅黑;" class="text-center">待评分学生列表</h3>
+        <table class="table table-hover table-striped">
+            <thead>
+                <tr>
+                    <th>编号</th>
+                    <th>姓名</th>
+                    <th>学号</th>
+                    <th>学院</th>
+                    <th>专业</th>
+                    <th>注册时间</th>
+                    <th>题目</th>
+                    <th>指导导师</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="subject-list">
+                @foreach (var x in Model)
+                {
+                    <tr id="table-tr-@x.Id">
+                        <td>@x.Id</td>
+                        <td id="name-@x.SubjectNumber">@x.Name</td>
+                        <td>@x.StudentNumber</td>
+                        <td>@x.College</td>
+                        <td>@x.Major</td>
+                        <td>@x.CreateTime</td>
+                        <td id="subject-@x.SubjectNumber">@x.Subject</td>
+                        <td>@x.Teacher</td>
+                        <td><a href="javascript:addscore(@x.SubjectNumber)" id="scoreBtn" class="btn btn-warning btn-sm">评分</a></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+<div class="modal fade" id="addScoreModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">添加分数</h4>
+            </div>
+            <div class="modal-body">
+                <input type="text" disabled="disabled" id="nametxt" class="form-control" /><br />
+                <input type="text" disabled="disabled" id="subjecttxt" class="form-control" /><br />
+                <input type="text" id="score" name="score" class="form-control" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">关闭</button>
+                <button type="button" id="sendScore" class="btn btn-success">提交</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/scripts/jquery-2.1.1.js"></script>
+<script type="text/javascript">
+    function addscore(id) {
+        $("#addScoreModal").modal("show");
+        $("#addScoreModal").find("input[id='subjecttxt']").val($("#subject-" + id).html());
+        $("#addScoreModal").find("input[id='nametxt']").val($("#name-" + id).html());
+        $("#sendScore").click(function () {
+            var score = $("#score").val();
+            if (score == "") {
+                alert("请正确输入");
+            }
+            else {
+                $.post("/Admin/CreateScore", { id: id, score: score }, function (data) {
+                    if (data == "success") {
+                        alert("评分成功...");
+                        window.location.reload();
+                    }
+                    else if (data == "您已经进行过了评分工作") {
+                        alert("您已经进行过评分，无需再次评分...");
+                    }
+                    else {
+                        alert("系统异常...");
+                    }
+
+                });
+            }
+        });
+    }
+</script>

@@ -15,6 +15,9 @@ namespace EMWeb.ViewModels
         public string CreateTime { get; set; }
         public string GraduateTime { get; set; }
         public string Teacher { get; set; }
+        public string ScoreTeacher { get; set; }
+        public int SubjectNumber { get; set; }
         public string Subject { get; set; }
+        public string Result { get; set; }
     }
 }
