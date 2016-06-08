@@ -28,6 +28,7 @@ namespace EMWeb.Models
         public int Number { get; set; }
 
         public DateTime CreateTime { get; set; }
+        public DateTime GraduateTime { get; set; }
 
         public State State { get; set; }
 

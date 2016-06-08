@@ -354,11 +354,35 @@ namespace EMWeb.Controllers
                     College = DB.Colleges.Where(y => y.Id == x.Student.CollegeId).SingleOrDefault().Title,
                     Major = DB.Majors.Where(y => y.Id == x.Student.MajorId).SingleOrDefault().Title,
                     CreateTime = x.Student.CreateTime.ToString(),
+                    GraduateTime=x.Student.GraduateTime.ToString(),
                     Teacher = x.Teacher.Name,
                     Subject = x.Title,
                 });
             }
             return PagedView(ret,50);
+        }
+        /// <summary>
+        /// 执行已经毕业操作
+        /// </summary>
+        /// <returns></returns>
+        [AnyRoles("系主任,指导老师")]
+        [HttpPost]
+        public IActionResult GraduateJug(int id)
+        {
+            var student = DB.Students
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            if (student == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            else
+            {
+                student.IsGraduate = IsGraduate.是;
+                student.GraduateTime = DateTime.Now;
+                DB.SaveChanges();
+                return Content("success");
+            }
         }
     }
 }

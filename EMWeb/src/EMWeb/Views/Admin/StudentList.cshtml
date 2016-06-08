@@ -29,7 +29,7 @@
                         <td>@x.CreateTime</td>
                         <td>@x.Subject</td>
                         <td>@x.Teacher</td>
-                        <td><a asp-action="StudentDetails" asp-controller="Admin" asp-route-id="@x.Id">查看毕业设计相关文件</a></td>
+                        <td><a asp-action="StudentDetails" asp-controller="Admin" asp-route-id="@x.Id" class="btn btn-primary btn-sm">查看毕业设计相关文件</a>&nbsp;<a href="javascript:graduatejug(@x.Id)" class="btn btn-success btn-sm">毕业</a></td>
                     </tr>
                 }
             </tbody>
@@ -66,10 +66,30 @@
                         <td>@x.CreateTime</td>
                         <td id="td-@x.Id">@x.Subject</td>
                         <td>@x.Teacher</td>
-                        <td><a asp-action="StudentDetails" asp-controller="Admin" asp-route-id="@x.Id">查看毕业设计相关文件</a></td>
+                        <td><a asp-action="StudentDetails" asp-controller="Admin" asp-route-id="@x.Id">查看毕业设计相关文件</a><a href="#">毕业</a></td>
                     </tr>
                 }
             </tbody>
         </table>
     </div>
 }
+<script src="~/scripts/jquery-2.1.1.js"></script>
+<script type="text/javascript">
+    function graduatejug(id) {
+        var jug = confirm("确定将该学生设置为毕业吗？");
+        jug && $.post("/Admin/GraduateJug", { id: id }, function (data) {
+            if (data == "success") {
+                alert("操作成功...");
+                $("#table-tr-" + id).remove();
+            }
+            else if (data == "error") {
+                alert("删除失败...");
+            }
+            else {
+                alert("系统异常...");
+            }
+
+        });
+
+    }
+</script>

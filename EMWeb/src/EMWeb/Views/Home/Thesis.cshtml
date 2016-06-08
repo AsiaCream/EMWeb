@@ -7,8 +7,8 @@
                     <tr>
                         <th>编号</th>
                         <th>标题</th>
+                        <th>文件类型</th>
                         <th>添加时间</th>
-                        <th>类型</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -18,8 +18,8 @@
                         <tr>
                             <td>@x.Id</td>
                             <td>@x.Title</td>
-                            <td>@x.CreateTime</td>
                             <td>@x.FType</td>
+                            <td>@x.CreateTime</td>
                             <td><a href="~/uploads/@x.Path" class="btn btn-success">右键另存为下载</a>&nbsp;</td>
                         </tr>
 
@@ -34,6 +34,7 @@
         </div>
     </div>
 </div>
+<div style="height:50px;"></div>
 <div class="modal fade" id="createthesis">
     <div class="modal-dialog">
         <div class="modal-content">

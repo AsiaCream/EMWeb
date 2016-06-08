@@ -10,6 +10,7 @@
                 <th>学院</th>
                 <th>专业</th>
                 <th>注册时间</th>
+                <th>毕业时间</th>
                 <th>题目</th>
                 <th>指导导师</th>
                 <th>操作</th>
@@ -25,6 +26,7 @@
                     <td>@x.College</td>
                     <td>@x.Major</td>
                     <td>@x.CreateTime</td>
+                    <td>@x.GraduateTime</td>
                     <td>@x.Subject</td>
                     <td>@x.Teacher</td>
                     <td><a asp-action="StudentDetails" asp-controller="Admin" asp-route-id="@x.Id">查看毕业设计相关文件</a></td>
