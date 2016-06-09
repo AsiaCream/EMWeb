@@ -1,38 +1,52 @@
 ﻿@model IEnumerable<StudentList>
 <div class="container">
-    <h3 style="margin:0;padding:0;font-family:微软雅黑;" class="text-center">已毕业学生列表</h3>
-    <table class="table table-hover table-striped">
-        <thead>
-            <tr>
-                <th>编号</th>
-                <th>姓名</th>
-                <th>学号</th>
-                <th>学院</th>
-                <th>专业</th>
-                <th>注册时间</th>
-                <th>毕业时间</th>
-                <th>题目</th>
-                <th>指导导师</th>
-                <th>操作</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var x in Model)
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="Search" asp-controller="Admin" method="post" id="searchfrm" class="navbar-form navbar-right" role="search">
+                <div class="form-group">
+                    <input type="text" class="form-control" name="key" id="key" placeholder="已毕业学生学号/姓名...">
+                </div>
+                <button type="button" id="search" class="btn btn-info">搜索</button>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12">
+            <h3 style="margin:0;padding:0;font-family:微软雅黑;" class="text-center">已毕业学生列表</h3>
+            <table class="table table-hover table-striped">
+                <thead>
+                    <tr>
+                        <th>编号</th>
+                        <th>姓名</th>
+                        <th>学号</th>
+                        <th>学院</th>
+                        <th>专业</th>
+                        <th>注册时间</th>
+                        <th>毕业时间</th>
+                        <th>题目</th>
+                        <th>指导导师</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var x in Model)
             {
-                <tr>
-                    <td>@x.Id</td>
-                    <td>@x.Name</td>
-                    <td>@x.StudentNumber</td>
-                    <td>@x.College</td>
-                    <td>@x.Major</td>
-                    <td>@x.CreateTime</td>
-                    <td>@x.GraduateTime</td>
-                    <td>@x.Subject</td>
-                    <td>@x.Teacher</td>
-                    <td><a asp-action="StudentDetails" asp-controller="Admin" asp-route-id="@x.Id">查看毕业设计相关文件</a></td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    @Html.MakePager("pager-item", "", "pager")
+                        <tr>
+                            <td>@x.Id</td>
+                            <td>@x.Name</td>
+                            <td>@x.StudentNumber</td>
+                            <td>@x.College</td>
+                            <td>@x.Major</td>
+                            <td>@x.CreateTime</td>
+                            <td>@x.GraduateTime</td>
+                            <td>@x.Subject</td>
+                            <td>@x.Teacher</td>
+                            <td><a asp-action="StudentDetails" asp-controller="Admin" asp-route-id="@x.Id">查看文件</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @Html.MakePager("pager-item", "", "pager")
+        </div>
+    </div>
 </div>

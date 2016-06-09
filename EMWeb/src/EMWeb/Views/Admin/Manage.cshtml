@@ -31,11 +31,11 @@
             <div class="col-md-8 col-md-offset-1">
                 @if (User.IsInRole("系主任"))
                 {
-                    <h2>欢迎系主任 @User.Current.UserName&nbsp;<a asp-action="Announcement" asp-controller="Home" style="font-size:20px;">最新公告</a></h2>
+                    <h3>欢迎系主任 @User.Current.UserName&nbsp;<a asp-action="Announcement" asp-controller="Home" style="font-size:20px;">最新公告</a></h3>
                 }
                 else
                 {
-                    <h2>欢迎指导老师 @User.Current.UserName&nbsp;<a asp-action="Announcement" asp-controller="Home" style="font-size:20px;">最新公告</a></h2>
+                    <h3>欢迎指导老师 @User.Current.UserName&nbsp;<a asp-action="Announcement" asp-controller="Home" style="font-size:20px;">最新公告</a></h3>
                 }
                 <hr />
                     <table class="table">
