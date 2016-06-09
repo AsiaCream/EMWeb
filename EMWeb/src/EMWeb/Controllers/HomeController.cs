@@ -125,7 +125,6 @@ namespace EMWeb.Controllers
                     .OrderByDescending(x => x.CreateTime)
                     .ToList();
                     ViewBag.Teacher = teacher;
-                    ViewBag.Announcement = DB.Announcements.OrderByDescending(x => x.Id).First().CreateTime;
                     ViewBag.Avatar = User.Current.AvatarId;
                     return View(student);
                 }
@@ -135,7 +134,6 @@ namespace EMWeb.Controllers
                     ViewBag.SubjectTeacher = DB.Teachers
                         .Where(x => x.Id == teacherid)
                         .SingleOrDefault();
-                    ViewBag.Announcement = DB.Announcements.OrderByDescending(x => x.Id).First().CreateTime;
                     ViewBag.Avatar = User.Current.AvatarId;
                     return View(student);
                 }
