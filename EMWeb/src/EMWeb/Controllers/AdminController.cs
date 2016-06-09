@@ -379,10 +379,22 @@ namespace EMWeb.Controllers
             }
             else
             {
-                student.IsGraduate = IsGraduate.是;
-                student.GraduateTime = DateTime.Now;
-                DB.SaveChanges();
-                return Content("success");
+                var result = DB.Results
+                    .Include(x => x.Subject)
+                    .Include(x => x.Subject.Student)
+                    .Where(x => x.Subject.StudentId == student.Id)
+                    .ToList();
+                if (result.Count > 0)
+                {
+                    student.IsGraduate = IsGraduate.是;
+                    student.GraduateTime = DateTime.Now;
+                    DB.SaveChanges();
+                    return Content("success");
+                }
+                else
+                {
+                    return Content("score");
+                }
             }
         }
         [AnyRoles("系主任,指导老师")]
@@ -468,7 +480,8 @@ namespace EMWeb.Controllers
                 .SingleOrDefault();
             var oldresult = DB.Results
                 .Include(x => x.Teacher)
-                .Where(x => x.TeacherId == teacher.Id)
+                .Include(x=>x.Subject)
+                .Where(x => x.TeacherId == teacher.Id&&x.SubjectId==subject.Id)
                 .SingleOrDefault();
             if (oldresult!=null)
             {
@@ -496,6 +509,29 @@ namespace EMWeb.Controllers
                 DB.SaveChanges();
                 return Content("success");
             }
+        }
+        [AnyRoles("系主任,指导老师")]
+        [HttpPost]
+        public IActionResult Search(string key)
+        {
+            //老师只能查找到本专业毕业相关的学生信息
+            var student = DB.Subjects
+                .Include(x=>x.Student)
+                .Include(x=>x.Teacher)
+                .Include(x=>x.Student.Major)
+                .Include(x=>x.Student.College)
+                .Where(x => x.Student.Number.ToString() == key || x.Student.Name == key)
+                .Where(x=>x.Student.IsGraduate==IsGraduate.是)
+                .Where(x=>x.Student.MajorId==DB.Teachers.Where(y=>y.UserId==User.Current.Id).SingleOrDefault().MajorId)
+                .ToList();
+            ViewBag.Student = student;
+            return View("SearchResult");
+        }
+        [AnyRoles("系主任,指导老师")]
+        [HttpGet]
+        public IActionResult Search()
+        {
+            return View();
         }
     }
 }
