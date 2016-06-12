@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Teacher>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h3 style="margin:0;padding:0;font-family:微软雅黑;" class="text-center">教师列表</h3>
+                <table class="table table-hover table-striped">
+                    <thead>
+                        <tr>
+                            <th>编号</th>
+                            <th>姓名</th>
+                            <th>工号</th>
+                            <th>学院</th>
+                            <th>专业</th>
+                            <th>注册时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="subject-list">
+                        @foreach (var x in Model)
+                {
+                            <tr id="table-tr-@x.Id">
+                                <td>@x.Id</td>
+                                <td>@x.Name</td>
+                                <td>@x.Number</td>
+                                <td>@x.College.Title</td>
+                                <td>@x.Major.Title</td>
+                                <td>@x.CreateTime</td>
+                                <td>@if (User.IsInRole("系主任"))
+                                { <a href="javascript:remove(@x.Id)" class="btn btn-danger btn-sm">删除</a>}</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+<script src="~/scripts/jquery-2.1.1.js"></script>
+<script type="text/javascript">
+    function remove(id) {
+        var jug = confirm("确定删除吗？请三思...");
+        jug && $.post("/Admin/DeleteTeacher", { id: id }, function (data) {
+            if (data == "success") {
+                alert("删除成功...");
+                $("#table-tr-" + id).remove();
+            }
+            else if (data == "error") {
+                alert("删除失败...")
+
+            }
+            else {
+                alert("系统异常");
+
+            }
+        });
+    }
+</script>

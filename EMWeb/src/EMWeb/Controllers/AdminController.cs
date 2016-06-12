@@ -533,5 +533,38 @@ namespace EMWeb.Controllers
         {
             return View();
         }
+        [AnyRoles("系主任,指导老师")]
+        public IActionResult TeacherList()
+        {
+            var ret = DB.Teachers
+                .Include(x=>x.Major)
+                .Include(x=>x.College)
+                .Where(x => x.MajorId == DB.Teachers.Where(y => y.UserId == User.Current.Id)
+                .SingleOrDefault().MajorId)
+                .OrderBy(x=>x.Id)
+                .ToList();
+            return View(ret);
+        }
+        [Authorize(Roles ="系主任")]
+        public IActionResult DeleteTeacher(int id)
+        {
+            var teacher = DB.Teachers
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            if (teacher == null)
+            {
+                return Content("error");
+            }
+            else
+            {
+                var user = DB.Users
+                    .Where(x => x.Id == teacher.UserId)
+                    .SingleOrDefault();
+                DB.Users.Remove(user);
+                DB.Teachers.Remove(teacher);
+                DB.SaveChanges();
+                return Content("success");
+            }
+        }
     }
 }
