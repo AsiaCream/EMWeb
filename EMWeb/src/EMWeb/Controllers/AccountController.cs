@@ -20,24 +20,33 @@ namespace EMWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username,string password)
         {
-            var result = await SignInManager.PasswordSignInAsync(username, password, false, false);
-            if (result.Succeeded)
+            var time = DB.OpenTimes.OrderByDescending(x => x.Id).FirstOrDefault();
+            if (DateTime.Now>=time.Start&&DateTime.Now<=time.End)
             {
-                var user = await UserManager.FindByNameAsync(username);
-
-                if (await UserManager.IsInRoleAsync(user, "学生"))
+                var result = await SignInManager.PasswordSignInAsync(username, password, false, false);
+                if (result.Succeeded)
                 {
-                    return Content("学生");
+                    var user = await UserManager.FindByNameAsync(username);
+
+                    if (await UserManager.IsInRoleAsync(user, "学生"))
+                    {
+                        return Content("学生");
+                    }
+                    else
+                    {
+                        return Content("老师");
+                    }
                 }
                 else
                 {
-                    return Content("老师");
+                    return Content("error");
                 }
             }
             else
             {
-                return Content("error");
+                return Content("time");
             }
+            
         }
         [HttpGet]
         public IActionResult Register()

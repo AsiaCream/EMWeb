@@ -62,7 +62,7 @@ namespace EMWeb.Models
                 var teacherfdd = new Teacher
                 {
                     Name = "王老师",
-                    Number = 2012023005,
+                    Number = 2012023111,
                     CreateTime = DateTime.Now,
                     UserId = teacher.Id,
                     CollegeId = college.Id,
@@ -116,7 +116,11 @@ namespace EMWeb.Models
                     UserId = headteacher.Id
                 };
                 DB.Logs.Add(log4);
-                
+                DB.OpenTimes.Add(new OpenTime
+                {
+                    Start = DateTime.Now,
+                    End=DateTime.Now,
+                });
             }
             DB.SaveChanges();
         }

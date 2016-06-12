@@ -21,6 +21,7 @@ namespace EMWeb.Models
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<Result> Results { get; set; }
+        public DbSet<OpenTime> OpenTimes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -61,6 +62,12 @@ namespace EMWeb.Models
             builder.Entity<Result>(e =>
             {
                 e.HasIndex(x => x.Id);
+            });
+            builder.Entity<OpenTime>(e =>
+            {
+                e.HasIndex(x => x.Id);
+                e.HasIndex(x => x.Start);
+                e.HasIndex(x => x.End);
             });
         }
     }
