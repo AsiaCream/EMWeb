@@ -341,7 +341,7 @@ namespace EMWeb.Controllers
             var student = DB.Subjects
                 .Include(x => x.Student)
                 .Include(x => x.Teacher)
-                .Where(x => x.Student.IsGraduate == IsGraduate.是 && x.Student.MajorId == DB.Teachers.Where(y => y.UserId == User.Current.Id).SingleOrDefault().MajorId)
+                .Where(x => x.Student.IsGraduate == IsGraduate.是 && x.Student.MajorId == DB.Teachers.Where(y => y.UserId == User.Current.Id).SingleOrDefault().MajorId&&x.Draw==Draw.通过)
                 .OrderByDescending(x=>x.Student.Number)
                 .ToList();
             var ret = new List<StudentList>();
@@ -419,8 +419,11 @@ namespace EMWeb.Controllers
                 {
                     x.Score = 0;
                 }
+                if(x.Subject.Student.IsGraduate == IsGraduate.否)
+                {
                     ret.Add(new StudentList
                     {
+
                         Id = x.Subject.StudentId,
                         Name = x.Subject.Student.Name,
                         StudentNumber = x.Subject.Student.Number.ToString(),
@@ -430,9 +433,10 @@ namespace EMWeb.Controllers
                         Teacher = x.Subject.Teacher.Name,
                         Subject = x.Subject.Title,
                         SubjectNumber = x.Subject.Id,
-                        Result=x.Score.ToString(),
-                        ScoreTeacher=x.Teacher.Name,
+                        Result = x.Score.ToString(),
+                        ScoreTeacher = x.Teacher.Name,
                     });
+                }
                 }
                 return View(ret.OrderBy(x=>x.StudentNumber).ToList());
         }
@@ -521,7 +525,7 @@ namespace EMWeb.Controllers
                 .Include(x=>x.Student.Major)
                 .Include(x=>x.Student.College)
                 .Where(x => x.Student.Number.ToString() == key || x.Student.Name == key)
-                .Where(x=>x.Student.IsGraduate==IsGraduate.是)
+                .Where(x=>x.Student.IsGraduate==IsGraduate.是&&x.Draw==Draw.通过)
                 .Where(x=>x.Student.MajorId==DB.Teachers.Where(y=>y.UserId==User.Current.Id).SingleOrDefault().MajorId)
                 .ToList();
             ViewBag.Student = student;

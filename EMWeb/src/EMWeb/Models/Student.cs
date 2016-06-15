@@ -45,5 +45,6 @@ namespace EMWeb.Models
         [ForeignKey("Major")]
         public int MajorId { get; set; }
         public virtual Major Major { get; set; }
+
     }
 }
