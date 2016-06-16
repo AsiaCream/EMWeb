@@ -5,7 +5,14 @@
             <div class="col-md-3">
                 <div class="caption">
                     <div class="thumbnail">
-                        <a href="#"><img src="~/images/person.png" width="150" height="100" alt="无法显示图片"/></a>
+                        @if (ViewBag.Avatar == null)
+                        {
+                            <a href="#"><img src="~/images/person.png" width="150" height="100" alt="无法显示图片" /></a>
+                        }
+                        else
+                        {
+                            <a href="#"><img src="~/file/download/@ViewBag.Avatar" style="width:100%" alt="无法显示图片" /></a>
+                        }
                     </div>
                 </div>
                 <table class="table">
@@ -31,13 +38,14 @@
             <div class="col-md-8 col-md-offset-1">
                 @if (User.IsInRole("系主任"))
                 {
-                    <h3>欢迎系主任 @User.Current.UserName&nbsp;<a asp-action="Announcement" asp-controller="Home" style="font-size:20px;">最新公告</a></h3>
+                    <h3>欢迎系主任 @User.Current.UserName&nbsp;<a asp-action="Announcement" asp-controller="Home" style="font-size:20px;">公告</a></h3>
                 }
                 else
                 {
-                    <h3>欢迎指导老师 @User.Current.UserName&nbsp;<a asp-action="Announcement" asp-controller="Home" style="font-size:20px;">最新公告</a></h3>
+                    <h3>欢迎指导老师 @User.Current.UserName&nbsp;<a asp-action="Announcement" asp-controller="Home" style="font-size:20px;">公告</a></h3>
                 }
                 <hr />
+                <form asp-action="EditAvatar" asp-controler="Admin" asp-route-id="@User.Current.Id" method="post" enctype="multipart/form-data" id="editavatar">
                     <table class="table">
                         <thead>
                             <tr>
@@ -45,7 +53,7 @@
                                 <td>@Model.Name</td>
                             </tr>
                             <tr>
-                                <th>编号</th>
+                                <th>学号</th>
                                 <td>@Model.Number</td>
                             </tr>
                             <tr>
@@ -57,15 +65,22 @@
                                 <td>@Model.College.Title</td>
                             </tr>
                             <tr>
-                                <th>添加时间</th>
+                                <th>注册时间</th>
                                 <td>@Model.CreateTime</td>
+                            </tr>
+                            <tr>
+                                <th>修改头像</th>
+                                <td><input type="file" name="avatar" id="filetype" formenctype="multipart/form-data" /></td>
                             </tr>
                         </thead>
                     </table>
+                </form>
+                <button id="avatarbtn" class="btn btn-primary form-group">提交</button>
             </div>
         </div>
     </div>
 </div>
+<div style="height:50px;"></div>
 <div class="modal fade" id="createCollege">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -253,6 +268,19 @@
                     alert("添加失败");
                 }
             });
+        }
+    });
+    $("#avatarbtn").click(function () {
+        var filetype = $("#filetype").val();
+        function test(file_name) {
+            var result = /\.[^\.]+/.exec(file_name);
+            return result;
+        }
+        if (test(filetype) != ".jpg") {
+            alert("请输入文件后缀名为jpg的图片");
+        }
+        else {
+            $("#editavatar").submit();
         }
     });
 </script>

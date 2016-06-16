@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Authorization;
+using Microsoft.Data.Entity;
+using Microsoft.AspNet.Http;
 using EMWeb.Models;
 using EMWeb.ViewModels;
-using Microsoft.Data.Entity;
+
 
 namespace EMWeb.Controllers
 {
@@ -74,12 +76,7 @@ namespace EMWeb.Controllers
                 .Include(x=>x.Major)
                 .Where(x => x.UserId == User.Current.Id)
                 .SingleOrDefault();
-            if (teacher == null)
-            {
-                return RedirectToAction("Error", "Home");
-            }
-            else
-            {
+            
                 var subject = DB.Subjects
                     .Include(x=>x.Teacher)
                     .Include(x=>x.Student)
@@ -105,9 +102,7 @@ namespace EMWeb.Controllers
                 ViewBag.Teacher = DB.Teachers
                     .Where(x => x.UserId == teacher.UserId)
                     .SingleOrDefault();
-                return PagedView(ret,20);
-            }
-            
+                return PagedView(ret.OrderByDescending(x=>x.PostTime).ToList(),20);
         }
         [AnyRoles("系主任,指导老师")]
         [HttpGet]
@@ -121,6 +116,7 @@ namespace EMWeb.Controllers
                 .Include(x => x.College)
                 .Where(x => x.UserId == User.Current.Id)
                 .SingleOrDefault();
+            ViewBag.Avatar = User.Current.AvatarId;
             return View(teacher);
         }
         #region 指导老师和系主任审核题目方法
@@ -569,6 +565,42 @@ namespace EMWeb.Controllers
                 DB.SaveChanges();
                 return Content("success");
             }
+        }
+        /// <summary>
+        /// 更改头像
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="avatar"></param>
+        /// <param name="Model"></param>
+        /// <returns></returns>
+        [AnyRoles("系主任,指导老师")]
+        [HttpPost]
+        public async Task<IActionResult> EditAvatar(long id, IFormFile avatar, User Model)
+        {
+            var user = DB.Users
+                .Include(x => x.Avatar)
+                .Where(x => x.Id == id)
+                .SingleOrDefault();
+            if (avatar != null)
+            {
+                try
+                {
+                    DB.Files.Remove(DB.Files.Single(x => x.Id == user.AvatarId));
+                }
+                catch { }
+                var file = new CodeComb.AspNet.Upload.Models.File
+                {
+                    Bytes = await avatar.ReadAllBytesAsync(),
+                    ContentLength = avatar.Length,
+                    ContentType = avatar.ContentType,
+                    FileName = avatar.GetFileName(),
+                    Time = DateTime.Now
+                };
+                DB.Files.Add(file);
+                user.AvatarId = file.Id;
+            }
+            DB.SaveChanges();
+            return RedirectToAction("Manage", "Admin");
         }
     }
 }
