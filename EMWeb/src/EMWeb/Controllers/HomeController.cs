@@ -90,7 +90,7 @@ namespace EMWeb.Controllers
                         Draw=DB.Subjects.Where(y=>y.Id==x.Number).SingleOrDefault().Draw.ToString(),
                     });
                 };
-                return PagedView(ret, 50);
+                return PagedView(ret.OrderByDescending(x=>x.Time).ToList(), 50);
             }
             else
             {
@@ -121,6 +121,14 @@ namespace EMWeb.Controllers
                     .ToList();
                     ViewBag.Teacher = teacher;
                     ViewBag.Avatar = User.Current.AvatarId;
+                    var info = DB.Informations
+                        .Where(x => x.SNumber == student.Id && x.IsRead == false)
+                        .OrderByDescending(x => x.CreateTime)
+                        .FirstOrDefault();
+                    if (info!=null)
+                    {
+                        ViewBag.Information = info;
+                    }
                     return View(student);
                 }
                 else
@@ -131,6 +139,14 @@ namespace EMWeb.Controllers
                         .Where(x => x.Id == teacherid)
                         .SingleOrDefault();
                     ViewBag.Avatar = User.Current.AvatarId;
+                    var info = DB.Informations
+                        .Where(x => x.SNumber == student.Id && x.IsRead == false)
+                        .OrderByDescending(x => x.CreateTime)
+                        .FirstOrDefault();
+                    if (info != null)
+                    {
+                        ViewBag.Information = info;
+                    }
                     return View(student);
                 }
                 
@@ -276,38 +292,110 @@ namespace EMWeb.Controllers
                 .Where(x => x.UserId == User.Current.Id)
                 .SingleOrDefault();
             var ret = DB.FinleInfos
+                .OrderByDescending(x=>x.CreateTime)
                 .Where(x => x.StudentId == stud.Id)
-                .Where(x => x.FType == FType.文档)
                 .ToList();
             return View(ret);
         }
         [HttpPost]
         [Authorize(Roles = ("学生"))]
-        public IActionResult CreateDocument(long id, string filename, IFormFile file)
+        public IActionResult CreateDocument(long id, string filename,string type, IFormFile file)
         {
             var user = DB.Users
                 .Where(x => x.Id == id)
                 .SingleOrDefault();
-            file.SaveAs(".\\wwwroot\\uploads\\" + user.UserName + "\\document\\" + filename + ".docx");
-            var fileinfo = new Models.FileInfo
+            if (type == "文档")
             {
-                Title = filename,
-                CreateTime = DateTime.Now,
-                Path = user.UserName + "\\document\\" + filename + ".docx",
-                FType = FType.文档,
-                StudentId = DB.Students.Where(x => x.UserId == user.Id).SingleOrDefault().Id,
+                file.SaveAs(".\\wwwroot\\uploads\\" + user.UserName + "\\document\\" + filename + ".docx");
+                var fileinfo = new Models.FileInfo
+                {
+                    Title = filename,
+                    CreateTime = DateTime.Now,
+                    Path = user.UserName + "\\document\\" + filename + ".docx",
+                    FType = FType.文档,
+                    StudentId = DB.Students.Where(x => x.UserId == user.Id).SingleOrDefault().Id,
 
-            };
-            DB.FinleInfos.Add(fileinfo);
-            DB.SaveChanges();
-            var log = DB.Logs.Add(new Log
+                };
+                DB.FinleInfos.Add(fileinfo);
+                DB.SaveChanges();
+                var log = DB.Logs.Add(new Log
+                {
+                    Roles = Roles.学生,
+                    Operation = Operation.上传文件,
+                    Time = DateTime.Now,
+                    Number = fileinfo.Id,
+                    UserId = User.Current.Id,
+                });
+            }
+            else if (type == "论文")
             {
-                Roles = Roles.学生,
-                Operation = Operation.上传文件,
-                Time = DateTime.Now,
-                Number = fileinfo.Id,
-                UserId = User.Current.Id,
-            });
+                file.SaveAs(".\\wwwroot\\uploads\\" + user.UserName + "\\thesis\\" + filename + ".docx");
+                var fileinfo = new Models.FileInfo
+                {
+                    Title = filename,
+                    CreateTime = DateTime.Now,
+                    Path = user.UserName + "\\thesis\\" + filename + ".docx",
+                    FType = FType.论文,
+                    StudentId = DB.Students.Where(x => x.UserId == user.Id).SingleOrDefault().Id,
+
+                };
+                DB.FinleInfos.Add(fileinfo);
+                DB.SaveChanges();
+                var log = DB.Logs.Add(new Log
+                {
+                    Roles = Roles.学生,
+                    Operation = Operation.上传文件,
+                    Time = DateTime.Now,
+                    Number = fileinfo.Id,
+                    UserId = User.Current.Id,
+                });
+            }
+            else if (type == "外文翻译")
+            {
+                file.SaveAs(".\\wwwroot\\uploads\\" + user.UserName + "\\english\\" + filename + ".docx");
+                var fileinfo = new Models.FileInfo
+                {
+                    Title = filename,
+                    CreateTime = DateTime.Now,
+                    Path = user.UserName + "\\english\\" + filename + ".docx",
+                    FType = FType.外文翻译,
+                    StudentId = DB.Students.Where(x => x.UserId == user.Id).SingleOrDefault().Id,
+
+                };
+                DB.FinleInfos.Add(fileinfo);
+                DB.SaveChanges();
+                var log = DB.Logs.Add(new Log
+                {
+                    Roles = Roles.学生,
+                    Operation = Operation.上传文件,
+                    Time = DateTime.Now,
+                    Number = fileinfo.Id,
+                    UserId = User.Current.Id,
+                });
+            }
+            else
+            {
+                file.SaveAs(".\\wwwroot\\uploads\\" + user.UserName + "\\report\\" + filename + ".docx");
+                var fileinfo = new Models.FileInfo
+                {
+                    Title = filename,
+                    CreateTime = DateTime.Now,
+                    Path = user.UserName + "\\report\\" + filename + ".docx",
+                    FType = FType.报告,
+                    StudentId = DB.Students.Where(x => x.UserId == user.Id).SingleOrDefault().Id,
+
+                };
+                DB.FinleInfos.Add(fileinfo);
+                DB.SaveChanges();
+                var log = DB.Logs.Add(new Log
+                {
+                    Roles = Roles.学生,
+                    Operation = Operation.上传文件,
+                    Time = DateTime.Now,
+                    Number = fileinfo.Id,
+                    UserId = User.Current.Id,
+                });
+            }
             DB.SaveChanges();
             return RedirectToAction("Document", "Home");
         }
@@ -446,6 +534,62 @@ namespace EMWeb.Controllers
             else
             {
                 return View(announce);
+            }
+        }
+        [HttpGet]
+        public IActionResult GetInformation(int id)
+        {
+            var ret = DB.Informations
+                .Where(x => x.Id == id && x.SNumber == DB.Students
+                .Where(y => y.UserId == User.Current.Id)
+                .SingleOrDefault()
+                .Id)
+                .SingleOrDefault();
+            ret.IsRead = true;
+            ret.ReadTime = DateTime.Now;
+            DB.SaveChanges();
+            return View(ret);
+        }
+        [HttpGet]
+        public IActionResult InfoDetails(int id)
+        {
+            var ret = DB.Informations
+                .Where(x => x.Id == id&&x.SNumber==DB.Students
+                .Where(y=>y.UserId==User.Current.Id)
+                .SingleOrDefault()
+                .Id)
+                .SingleOrDefault();
+            return View(ret);
+        }
+        [HttpGet]
+        public IActionResult InformationList()
+        {
+            var info = DB.Informations
+                .Where(x => x.SNumber == DB.Students
+                .Where(y => y.UserId == User.Current.Id&&x.IsRead==true)
+                .SingleOrDefault()
+                .Id)
+                .OrderByDescending(x=>x.ReadTime)
+                .ToList();
+            return PagedView(info,50);
+        }
+        [HttpPost]
+        public IActionResult DeleteInfo(int id)
+        {
+            var ret = DB.Informations
+                .Where(x => x.Id == id && x.SNumber == DB.Students
+                .Where(y => y.UserId == User.Current.Id)
+                .SingleOrDefault().Id)
+                .SingleOrDefault();
+            if (ret == null)
+            {
+                return Content("error");
+            }
+            else
+            {
+                DB.Informations.Remove(ret);
+                DB.SaveChanges();
+                return Content("success");
             }
         }
     }

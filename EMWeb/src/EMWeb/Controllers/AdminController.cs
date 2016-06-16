@@ -129,6 +129,15 @@ namespace EMWeb.Controllers
                 {
                     DB.Subjects.Remove(x);
                 }
+                var info = new Information
+                {
+                    SNumber = id,
+                    TNumber = DB.Teachers.Where(x => x.UserId == User.Current.Id).SingleOrDefault().Id,
+                    CreateTime = DateTime.Now,
+                    IsRead = false,
+                    Content = "您的老师 "+ DB.Teachers.Where(x => x.UserId == User.Current.Id).SingleOrDefault().Name+ " 觉得你不适合他们组，请选择别的指导老师...",
+                };
+                DB.Informations.Add(info);
                 DB.SaveChanges();
                 return Content("success");
             }
@@ -173,11 +182,10 @@ namespace EMWeb.Controllers
                 var ordersub = DB.Subjects
                     .Where(x => x.StudentId == student.Id)
                     .Where(x => x.Id != subject.Id)
-                    .Where(x => x.Draw == Draw.待审核)
+                    .Where(x => x.Draw == Draw.待审核||x.Draw==Draw.未通过)
                     .ToList();
                 foreach (var x in ordersub)
                 {
-                    x.Draw = Draw.未通过;
                     x.DrawTime = DateTime.Now;
                     DB.Logs.Add(new Log
                     {
@@ -187,6 +195,7 @@ namespace EMWeb.Controllers
                         UserId = User.Current.Id,
                         Number = x.Id,
                     });
+                    DB.Subjects.Remove(x);
                 }
                 var log = new Log
                 {
@@ -197,6 +206,15 @@ namespace EMWeb.Controllers
                     Time = DateTime.Now,
                 };
                 DB.Logs.Add(log);
+                var info = new Information
+                {
+                    SNumber = student.Id,
+                    TNumber = DB.Teachers.Where(x => x.UserId == User.Current.Id).SingleOrDefault().Id,
+                    CreateTime = DateTime.Now,
+                    IsRead = false,
+                    Content = "老师已经将您的题目 《" + subject.Title + "》 审核通过",
+                };
+                DB.Informations.Add(info);
                 DB.SaveChanges();
                 return Content("success");
             }
@@ -214,6 +232,9 @@ namespace EMWeb.Controllers
             }
             else
             {
+                var student = DB.Students
+                    .Where(x => x.Id == subject.StudentId)
+                    .SingleOrDefault();
                 subject.Draw = Draw.未通过;
                 subject.DrawTime = DateTime.Now;
                 var log = new Log
@@ -225,6 +246,15 @@ namespace EMWeb.Controllers
                     UserId = User.Current.Id,
                 };
                 DB.Logs.Add(log);
+                var info = new Information
+                {
+                    SNumber = student.Id,
+                    TNumber = DB.Teachers.Where(x => x.UserId == User.Current.Id).SingleOrDefault().Id,
+                    CreateTime = DateTime.Now,
+                    IsRead = false,
+                    Content = "老师已经将您的题目 《" + subject.Title + "》 设置为审核未通过",
+                };
+                DB.Informations.Add(info);
                 DB.SaveChanges();
                 return Content("success");
             }

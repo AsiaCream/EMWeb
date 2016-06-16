@@ -12,6 +12,7 @@ namespace EMWeb.Models
         报告,
         源代码,
         文档,
+        外文翻译,
     }
     public class FileInfo
     {

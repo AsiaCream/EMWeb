@@ -97,6 +97,7 @@ namespace EMWeb.Controllers
                         Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username + "\\document");
                         Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username + "\\thesis");
                         Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username + "\\sourcecode");
+                        Directory.CreateDirectory(".\\wwwroot\\uploads\\" + username + "\\english");
                         return Content("success");
                     }
                     else

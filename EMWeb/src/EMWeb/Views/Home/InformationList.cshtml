@@ -1,0 +1,52 @@
+﻿@model IEnumerable<Information>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-12">
+            <h3 style="margin:0;padding:0;font-family:微软雅黑;" class="text-center">已读通知</h3>
+            <table class="table table-hover table-responsive table-striped">
+                <thead>
+                    <tr>
+                        <th>通知ID</th>
+                        <th>信息阅读时间</th>
+                        <th>内容</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var x in Model)
+                    {
+                        <tr id="tr-@x.Id">
+                            <td>@x.Id</td>
+                            <td>@x.ReadTime</td>
+                            <td>@x.Content</td>
+                            <td><a href="javascript:remove(@x.Id)" class="btn btn-danger">删除</a></td>
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+            @Html.MakePager("page-item", "", "pager")
+        </div>
+    </div>
+</div>
+<script src="~/scripts/jquery-2.1.1.js"></script>
+<script type="text/javascript">
+    function remove(id) {
+        var jug = confirm("是否删除该通知？");
+        jug && $.post("/Home/DeleteInfo", { id: id }, function (data) {
+            if (data == "success") {
+                alert("删除成功");
+                $("#tr-" + id).remove();
+            }
+            else if (data == "error") {
+                alert("删除失败");
+            }
+            else {
+                alert("异常");
+
+            }
+
+        })
+
+    }
+</script>
