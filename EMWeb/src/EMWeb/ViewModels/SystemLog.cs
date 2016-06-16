@@ -14,5 +14,6 @@ namespace EMWeb.ViewModels
         public string Operation { get; set; }
         public DateTime Time { get; set; }
         public int TargetNumber { get; set; }
+        public string STitle { get; set; }
     }
 }

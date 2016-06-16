@@ -35,17 +35,11 @@ namespace EMWeb.Controllers
         [Authorize(Roles =("学生"))]
         public IActionResult Subject()
         {
-            var student = DB.Students
-                .Where(x => x.UserId == User.Current.Id)
-                .SingleOrDefault();
-            if (student == null)
-            {
-                return RedirectToAction("Error", "Home");
-            }
-            else
-            {
                 var subject = DB.Subjects
-                    .Where(x => x.StudentId == student.Id)
+                    .Where(x => x.StudentId == DB.Students
+                    .Where(y=>y.UserId==User.Current.Id)
+                    .SingleOrDefault()
+                    .Id)
                     .OrderByDescending(x => x.PostTime)
                     .FirstOrDefault();
                 if (subject == null)
@@ -61,7 +55,7 @@ namespace EMWeb.Controllers
                     .ToList();
                     return View(ret);
                 }
-            }
+            
         }
         [HttpGet]
         [Authorize(Roles =("学生"))]

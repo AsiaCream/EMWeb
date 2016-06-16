@@ -196,8 +196,6 @@ namespace EMWeb.Controllers
                 .Where(x => x.Roles == Roles.老师)
                 .OrderByDescending(x => x.Time)
                 .ToList();
-            if (log.Count() != 0)
-            {
                 var ret = new List<SystemLog>();
                 foreach (var x in log)
                 {
@@ -210,15 +208,11 @@ namespace EMWeb.Controllers
                         Operation = x.Operation.ToString(),
                         Time = x.Time,
                         TargetNumber = x.Number,
+                        STitle = DB.Subjects.Where(y => y.Id == x.Number).SingleOrDefault().Title,
                     });
                 };
 
                 return PagedView(ret, 50);
-            }
-            else
-            {
-                return RedirectToAction("Error", "Home");
-            }
         }
         [HttpGet]
         public IActionResult StudentLog()
@@ -227,8 +221,7 @@ namespace EMWeb.Controllers
                 .Where(x => x.Roles == Roles.学生)
                 .OrderByDescending(x => x.Time)
                 .ToList();
-            if (log.Count() != 0)
-            {
+            
                 var ret = new List<SystemLog>();
                 foreach (var x in log)
                 {
@@ -245,11 +238,6 @@ namespace EMWeb.Controllers
                 };
 
                 return PagedView(ret, 50);
-            }
-            else
-            {
-                return RedirectToAction("Error", "Home");
-            }
         }
         [HttpGet]
         public IActionResult AllMajor()
