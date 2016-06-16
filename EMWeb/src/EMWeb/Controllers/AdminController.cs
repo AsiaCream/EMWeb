@@ -105,10 +105,17 @@ namespace EMWeb.Controllers
                     });
                 }
 
-                ViewBag.Teacher = DB.Teachers
-                    .Where(x => x.UserId == teacher.UserId)
-                    .SingleOrDefault();
-                return PagedView(ret.OrderByDescending(x=>x.PostTime).ToList(),20);
+            ViewBag.Teacher = DB.Teachers
+                .Where(x => x.UserId == teacher.UserId)
+                .SingleOrDefault();
+            ViewBag.Teachers = DB.Teachers
+                .Include(x => x.Major)
+                .Where(x=>x.MajorId == teacher.MajorId)
+                .ToList();
+            ViewBag.Students = DB.Students
+                .Where(x => x.MajorId == teacher.MajorId && x.IsGraduate == IsGraduate.否)
+                .ToList();
+            return PagedView(ret.OrderByDescending(x=>x.PostTime).ToList(),20);
         }
         [AnyRoles("指导老师,系主任")]
         [HttpPost]
@@ -135,7 +142,7 @@ namespace EMWeb.Controllers
                     TNumber = DB.Teachers.Where(x => x.UserId == User.Current.Id).SingleOrDefault().Id,
                     CreateTime = DateTime.Now,
                     IsRead = false,
-                    Content = "您的老师 "+ DB.Teachers.Where(x => x.UserId == User.Current.Id).SingleOrDefault().Name+ " 觉得你不适合他们组，请选择别的指导老师...",
+                    Content = "您之前选择的老师 "+ DB.Teachers.Where(x => x.UserId == User.Current.Id).SingleOrDefault().Name+ " 觉得你不适合他们组，请选择别的指导老师...",
                 };
                 DB.Informations.Add(info);
                 DB.SaveChanges();
@@ -660,6 +667,64 @@ namespace EMWeb.Controllers
             }
             DB.SaveChanges();
             return RedirectToAction("Manage", "Admin");
+        }
+        [Authorize(Roles =("系主任"))]
+        [HttpPost]
+        public IActionResult FixedStudent(string teachername,string studentname,string subjecttitle)
+        {
+            var teacher = DB.Teachers
+                .Where(x => x.Name == teachername && x.MajorId == DB.Teachers
+                .Where(y => y.UserId == User.Current.Id)
+                .SingleOrDefault()
+                .MajorId)
+                .SingleOrDefault();
+            var student = DB.Students
+                .Where(x => x.Name == studentname && x.MajorId == DB.Teachers
+                .Where(y => y.UserId == User.Current.Id)
+                .SingleOrDefault()
+                .MajorId&&x.IsGraduate==IsGraduate.否)
+                .SingleOrDefault();
+            var sub = DB.Subjects
+                .Include(x=>x.Student)
+                .Where(x => x.Student.MajorId == DB.Teachers
+                .Where(y => y.UserId == User.Current.Id)
+                .SingleOrDefault()
+                .MajorId&&x.Student.Name==studentname&&x.Student.IsGraduate==IsGraduate.否)
+                .ToList();
+            foreach(var x in sub)
+            {
+                DB.Subjects.Remove(x);
+            }
+            var subject = new Subject
+            {
+                TeacherId=teacher.Id,
+                StudentId=student.Id,
+                DrawTime=DateTime.Now,
+                PostTime=DateTime.Now,
+                Draw=Draw.通过,
+                Title=subjecttitle,
+            };
+            DB.Subjects.Add(subject);
+            student.State = State.锁定;
+            var log = new Log
+            {
+                Operation = Operation.添加学生,
+                Roles = Roles.系主任,
+                Number = student.Id,
+                Time = DateTime.Now,
+                UserId = User.Current.Id,
+            };
+            DB.Logs.Add(log);
+            var info = DB.Informations.Add(new Information
+            {
+                SNumber = student.Id,
+                TNumber = DB.Teachers.Where(x => x.UserId == User.Current.Id).SingleOrDefault().Id,
+                CreateTime = DateTime.Now,
+                IsRead = false,
+                Content = "系主任 " + DB.Teachers.Where(x => x.UserId == User.Current.Id).SingleOrDefault().Name + " 已经将你的题目改为《" + subjecttitle + "》，指导老师为" + teachername,
+            });
+            DB.SaveChanges();
+            return RedirectToAction("Subject", "Admin");
         }
     }
 }
