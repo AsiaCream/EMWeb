@@ -21,6 +21,7 @@ namespace EMWeb.Models
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<Result> Results { get; set; }
+        public DbSet<Information> Informations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -29,14 +30,27 @@ namespace EMWeb.Models
             builder.Entity<FileInfo>(e =>
             {
                 e.HasIndex(x => x.Id);
+                e.HasIndex(x => x.CreateTime);
+                e.HasIndex(x => x.StudentId);
             });
             builder.Entity<Teacher>(e =>
             {
                 e.HasIndex(x => x.Id);
+                e.HasIndex(x => x.CreateTime);
+                e.HasIndex(x => x.CollegeId);
+                e.HasIndex(x => x.MajorId);
+                e.HasIndex(x => x.Number);
+                e.HasIndex(x => x.UserId);
             });
             builder.Entity<Student>(e =>
             {
                 e.HasIndex(x => x.Id);
+                e.HasIndex(x => x.CreateTime);
+                e.HasIndex(x => x.UserId);
+                e.HasIndex(x => x.CollegeId);
+                e.HasIndex(x => x.MajorId);
+                e.HasIndex(x => x.Number);
+                e.HasIndex(x => x.GraduateTime);
             });
             builder.Entity<College>(e =>
             {
@@ -45,24 +59,45 @@ namespace EMWeb.Models
             builder.Entity<Major>(e =>
             {
                 e.HasIndex(x => x.Id);
+                e.HasIndex(x => x.CollegeId);
             });
             builder.Entity<Subject>(e =>
             {
                 e.HasIndex(x => x.Id);
+                e.HasIndex(x => x.DrawTime);
+                e.HasIndex(x => x.PostTime);
+                e.HasIndex(x => x.StudentId);
+                e.HasIndex(x => x.TeacherId);
             });
             builder.Entity<Log>(e =>
             {
                 e.HasIndex(x => x.Id);
+                e.HasIndex(x => x.Time);
+                e.HasIndex(x => x.Number);
+                e.HasIndex(x => x.UserId);
             });
             builder.Entity<Announcement>(e =>
             {
                 e.HasIndex(x => x.Id);
+                e.HasIndex(x => x.CreateTime);
+                e.HasIndex(x => x.MajorId);
             });
             builder.Entity<Result>(e =>
             {
                 e.HasIndex(x => x.Id);
+                e.HasIndex(x => x.CreateTime);
+                e.HasIndex(x => x.TeacherId);
+                e.HasIndex(x => x.SubjectId);
+                e.HasIndex(x => x.Score);
             });
-            
+            builder.Entity<Information>(e =>
+            {
+                e.HasIndex(x => x.Id);
+                e.HasIndex(x => x.ReadTime);
+                e.HasIndex(x => x.CreateTime);
+                e.HasIndex(x => x.SNumber);
+                e.HasIndex(x => x.TNumber);
+            });
         }
     }
 }

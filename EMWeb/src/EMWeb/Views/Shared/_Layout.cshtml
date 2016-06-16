@@ -28,6 +28,12 @@
             margin-top:-100px;
             display:none;
         }
+        a{
+            text-decoration:none;
+        }
+        a:hover{
+            text-decoration:none;
+        }
     </style>
 </head>
 <body>
@@ -56,11 +62,12 @@
                     @if (User.IsInRole("学生"))
                     {
                         <li><a asp-action="Subject" aps-controller="Home">选题 <span class="sr-only">(current)</span></a></li>
-                        <li><a asp-action="Report" asp-controller="Home">报告</a></li>
+                        @*<li><a asp-action="Report" asp-controller="Home">报告</a></li>*@
+                        @*<li><a asp-action="Thesis" asp-controller="Home">论文</a></li>*@
+                        <li><a asp-action="Document" asp-controller="Home">文件</a></li>
                         <li><a asp-action="SourceCode" asp-controller="Home">源代码</a></li>
-                        <li><a asp-action="Thesis" asp-controller="Home">论文</a></li>
-                        <li><a asp-action="Document" asp-controller="Home">文档</a></li>
                         <li><a asp-action="MySubjectLog" asp-controller="Home">选题日志</a></li>
+                        <li><a asp-action="InformationList" asp-controller="Home">已读通知</a></li>
                     }
                     @if (User.IsInRole("系主任"))
                     {
