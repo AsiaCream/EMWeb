@@ -20,9 +20,6 @@ namespace EMWeb.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string username,string password)
         {
-            var time = DB.OpenTimes.OrderByDescending(x => x.Id).FirstOrDefault();
-            if (DateTime.Now>=time.Start&&DateTime.Now<=time.End)
-            {
                 var result = await SignInManager.PasswordSignInAsync(username, password, false, false);
                 if (result.Succeeded)
                 {
@@ -41,12 +38,6 @@ namespace EMWeb.Controllers
                 {
                     return Content("error");
                 }
-            }
-            else
-            {
-                return Content("time");
-            }
-            
         }
         [HttpGet]
         public IActionResult Register()
