@@ -46,6 +46,5 @@ namespace EMWeb.Models
         public int MajorId { get; set; }
         public virtual Major Major { get; set; }
 
-        public virtual ICollection<TeacherSelected> TeacherSelectees { get; set; } = new List<TeacherSelected>();
     }
 }

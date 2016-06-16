@@ -21,7 +21,6 @@ namespace EMWeb.Models
         public DbSet<Announcement> Announcements { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<Result> Results { get; set; }
-        public DbSet<TeacherSelected> TeacherSelected { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -63,10 +62,7 @@ namespace EMWeb.Models
             {
                 e.HasIndex(x => x.Id);
             });
-            builder.Entity<TeacherSelected>(e =>
-            {
-                e.HasKey(x => new { x.TeacherId, x.StudentId });
-            });
+            
         }
     }
 }

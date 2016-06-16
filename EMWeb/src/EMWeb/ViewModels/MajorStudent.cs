@@ -8,6 +8,7 @@ namespace EMWeb.ViewModels
     public class MajorStudent
     {
         public int Id { get; set; }
+        public int StudentNumber { get; set; }
         public string StudentName { get; set; }
         public string TeacherName { get; set; }
         public string SubjectTitle { get; set; }

@@ -30,7 +30,5 @@ namespace EMWeb.Models
         [ForeignKey("Major")]
         public int MajorId { get; set; }
         public virtual Major Major { get; set; }
-
-        public virtual ICollection<TeacherSelected> TeacherSelecteds { get; set; } = new List<TeacherSelected>();
     }
 }

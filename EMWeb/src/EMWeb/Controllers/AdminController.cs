@@ -43,6 +43,11 @@ namespace EMWeb.Controllers
 
                     else
                     {
+                        //var teacherselected = DB.TeacherSelected
+                        //    .Where(x => x.StudentId == student.Id && x.TeacherId == DB.Teachers
+                        //    .Where(y => y.Name == teacher)
+                        //    .SingleOrDefault().Id)
+                        //    .SingleOrDefault();
                         var tea = DB.Teachers
                         .Where(x => x.Name == teacher)
                         .SingleOrDefault();
@@ -89,6 +94,7 @@ namespace EMWeb.Controllers
                     ret.Add(new MajorStudent
                     {
                         Id = x.Id,
+                        StudentNumber=x.Student.Id,
                         StudentName = x.Student.Name,
                         TeacherName = x.Teacher.Name,
                         SubjectTitle = x.Title,
@@ -103,6 +109,29 @@ namespace EMWeb.Controllers
                     .Where(x => x.UserId == teacher.UserId)
                     .SingleOrDefault();
                 return PagedView(ret.OrderByDescending(x=>x.PostTime).ToList(),20);
+        }
+        [AnyRoles("指导老师,系主任")]
+        [HttpPost]
+        public IActionResult NotSelected(int id)
+        {
+            var student = DB.Students
+                .SingleOrDefault(x => x.Id == id);
+            if (student == null)
+            {
+                return Content("error");
+            }
+            else
+            {
+                var subject = DB.Subjects
+                    .Where(x => x.StudentId == student.Id)
+                    .ToList();
+                foreach(var x in subject)
+                {
+                    DB.Subjects.Remove(x);
+                }
+                DB.SaveChanges();
+                return Content("success");
+            }
         }
         [AnyRoles("系主任,指导老师")]
         [HttpGet]

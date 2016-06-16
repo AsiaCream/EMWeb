@@ -90,7 +90,7 @@ namespace EMWeb.Controllers
                         Draw=DB.Subjects.Where(y=>y.Id==x.Number).SingleOrDefault().Draw.ToString(),
                     });
                 };
-                return PagedView(ret, 20);
+                return PagedView(ret, 50);
             }
             else
             {
@@ -112,6 +112,7 @@ namespace EMWeb.Controllers
                 var subject = DB.Subjects
                     .Where(x => x.StudentId == student.Id)
                     .ToList();
+                //没有提交过题目
                 if (subject.Count()==0)
                 {
                     var teacher = DB.Teachers
@@ -124,6 +125,7 @@ namespace EMWeb.Controllers
                 }
                 else
                 {
+                    //提交过题目
                     var teacherid= subject.OrderBy(x => x.Id).First().TeacherId;
                     ViewBag.SubjectTeacher = DB.Teachers
                         .Where(x => x.Id == teacherid)
