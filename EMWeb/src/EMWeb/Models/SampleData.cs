@@ -20,6 +20,7 @@ namespace EMWeb.Models
 
             if (DB.Database != null && DB.Database.EnsureCreated())
             {
+                //初始化用户角色
                 await roleManager.CreateAsync(new IdentityRole<long> { Name = "系主任" });
                 await roleManager.CreateAsync(new IdentityRole<long> { Name = "指导老师" });
                 await roleManager.CreateAsync(new IdentityRole<long> { Name = "学生" });
@@ -31,6 +32,19 @@ namespace EMWeb.Models
                 var teacher = new User { UserName = "Cream", Email = "343224963@qq.com" };
                 await userManager.CreateAsync(teacher, "123456");
                 await userManager.AddToRoleAsync(teacher, "指导老师");
+
+                var teacher1 = new User { UserName = "Adminjin", Email = "343224963@qq.com" };
+                await userManager.CreateAsync(teacher1, "123456");
+                await userManager.AddToRoleAsync(teacher1, "指导老师");
+
+                var teacher2 = new User { UserName = "Adminwu", Email = "343224963@qq.com" };
+                await userManager.CreateAsync(teacher2, "123456");
+                await userManager.AddToRoleAsync(teacher2, "指导老师");
+
+                var teacher3 = new User { UserName = "Adminliang", Email = "343224963@qq.com" };
+                await userManager.CreateAsync(teacher3, "123456");
+                await userManager.AddToRoleAsync(teacher3, "指导老师");
+                
 
                 var guest = new User { UserName = "Guest", Email = "627148026@qq.com" };
                 await userManager.CreateAsync(guest, "123456");
@@ -68,6 +82,36 @@ namespace EMWeb.Models
                     MajorId = major1.Id
                 };
                 DB.Teachers.Add(teacherzhang);
+                var teacherjin = new Teacher
+                {
+                    Name = "金老师",
+                    Number = 2012023112,
+                    CreateTime = DateTime.Now,
+                    UserId = teacher1.Id,
+                    CollegeId = college.Id,
+                    MajorId = major1.Id
+                };
+                DB.Teachers.Add(teacherjin);
+                var teacherwu = new Teacher
+                {
+                    Name = "吴老师",
+                    Number = 2012023113,
+                    CreateTime = DateTime.Now,
+                    UserId = teacher2.Id,
+                    CollegeId = college.Id,
+                    MajorId = major1.Id
+                };
+                DB.Teachers.Add(teacherwu);
+                var teacherliang = new Teacher
+                {
+                    Name = "梁老师",
+                    Number = 2012023110,
+                    CreateTime = DateTime.Now,
+                    UserId = teacher3.Id,
+                    CollegeId = college.Id,
+                    MajorId = major1.Id
+                };
+                DB.Teachers.Add(teacherliang);
 
                 var teacherfdd = new Teacher
                 {
@@ -171,6 +215,33 @@ namespace EMWeb.Models
                     UserId = headteacher.Id
                 };
                 DB.Logs.Add(log9);
+                var log10 = new Log
+                {
+                    Roles = Roles.系主任,
+                    Operation = Operation.添加老师,
+                    Time = DateTime.Now,
+                    Number = teacherjin.Id,
+                    UserId = headteacher.Id
+                };
+                DB.Logs.Add(log10);
+                var log11 = new Log
+                {
+                    Roles = Roles.系主任,
+                    Operation = Operation.添加老师,
+                    Time = DateTime.Now,
+                    Number = teacherwu.Id,
+                    UserId = headteacher.Id
+                };
+                DB.Logs.Add(log11);
+                var log12 = new Log
+                {
+                    Roles = Roles.系主任,
+                    Operation = Operation.添加老师,
+                    Time = DateTime.Now,
+                    Number = teacherliang.Id,
+                    UserId = headteacher.Id
+                };
+                DB.Logs.Add(log12);
             }
             DB.SaveChanges();
         }

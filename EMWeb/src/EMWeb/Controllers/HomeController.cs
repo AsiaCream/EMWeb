@@ -52,8 +52,9 @@ namespace EMWeb.Controllers
                     .Include(x => x.Teacher)
                     .Include(x => x.Student)
                     .Where(x => x.TeacherId == subject.TeacherId)
+                    .Where(x=>x.Student.IsGraduate==IsGraduate.否)
                     .ToList();
-                    return View(ret);
+                    return PagedView(ret.OrderByDescending(x=>x.PostTime).ToList(),50);
                 }
             
         }

@@ -21,10 +21,9 @@
                         <th>学院</th>
                         <th>专业</th>
                         <th>注册时间</th>
-                        <th>毕业时间</th>
+                        <th>完成时间</th>
                         <th>题目</th>
-                        <th>分数</th>
-                        <th>指导老师师</th>
+                        <th>指导老师</th>
                         <th>操作</th>
                     </tr>
                 </thead>
@@ -40,7 +39,6 @@
                             <td>@x.Student.CreateTime</td>
                             <td>@x.Student.GraduateTime</td>
                             <td>@x.Title</td>
-                            <td>无</td>
                             <td>@x.Teacher.Name</td>
                             <td><a asp-action="StudentDetails" asp-controller="Admin" asp-route-id="@x.Id">查看文件</a></td>
                         </tr>

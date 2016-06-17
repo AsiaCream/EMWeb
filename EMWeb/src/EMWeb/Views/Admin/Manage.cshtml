@@ -17,6 +17,9 @@
                 </div>
                 <table class="table">
                     <tbody>
+                        <tr>
+                            <td><a class="btn btn-primary form-control" asp-action="Subject" asp-controller="Admin">查看选题情况</a></td>
+                        </tr>
                         @if (User.IsInRole("系主任"))
                         {
                             <tr>
@@ -29,9 +32,6 @@
                                 <td><a class="btn btn-primary form-control" id="addTeacher">添加指导老师</a></td>
                             </tr>
                         }
-                        <tr>
-                            <td><a class="btn btn-primary form-control" asp-action="Subject" asp-controller="Admin">查看选题情况</a></td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -53,7 +53,7 @@
                                 <td>@Model.Name</td>
                             </tr>
                             <tr>
-                                <th>学号</th>
+                                <th>工号</th>
                                 <td>@Model.Number</td>
                             </tr>
                             <tr>

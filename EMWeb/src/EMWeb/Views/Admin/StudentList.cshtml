@@ -31,7 +31,7 @@
                                 <td>@x.CreateTime</td>
                                 <td>@x.Subject</td>
                                 <td>@x.Teacher</td>
-                                <td><a asp-action="StudentDetails" asp-controller="Admin" asp-route-id="@x.Id" class="btn btn-primary btn-sm">查看文件</a>&nbsp;<a href="javascript:graduatejug(@x.Id)" class="btn btn-success btn-sm">毕业</a></td>
+                                <td><a asp-action="StudentDetails" asp-controller="Admin" asp-route-id="@x.Id" class="btn btn-primary btn-sm">查看文件</a>&nbsp;<a href="javascript:graduatejug(@x.Id)" class="btn btn-success btn-sm">完成</a></td>
                             </tr>
                         }
                     </tbody>
@@ -72,7 +72,7 @@
                                 <td>@x.CreateTime</td>
                                 <td id="td-@x.Id">@x.Subject</td>
                                 <td>@x.Teacher</td>
-                                <td><a asp-action="StudentDetails" asp-controller="Admin" asp-route-id="@x.Id">查看文件</a><a href="javascript:graduatejug(@x.Id)" class="btn btn-success btn-sm">毕业</a></td>
+                                <td><a asp-action="StudentDetails" asp-controller="Admin" asp-route-id="@x.Id">查看文件</a><a href="javascript:graduatejug(@x.Id)" class="btn btn-success btn-sm">完成设计</a></td>
                             </tr>
                         }
                     </tbody>
@@ -84,7 +84,7 @@
 <script src="~/scripts/jquery-2.1.1.js"></script>
 <script type="text/javascript">
     function graduatejug(id) {
-        var jug = confirm("确定将该学生设置为毕业吗？");
+        var jug = confirm("确定将该学生设置为设计完成吗？");
         jug && $.post("/Admin/GraduateJug", { id: id }, function (data) {
             if (data == "success") {
                 alert("操作成功...");
@@ -94,7 +94,7 @@
                 alert("删除失败...");
             }
             else if (data == "score") {
-                alert("该学生还没有进行毕业设计评分，请评分后再设置状态为毕业状态...");
+                alert("该学生还没有进行毕业设计评分，请评分后再设置状态为设计完成状态...");
             }
             else {
                 alert("系统异常...");

@@ -18,11 +18,12 @@ namespace EMWeb.Controllers
         [HttpPost]
         public IActionResult CreateSubject(Subject subject,string teacher)
         {
-            var sub = DB.Subjects
-                .Where(x => x.Title == subject.Title)
-                .SingleOrDefault();
             var student = DB.Students
                 .Where(x => x.UserId == User.Current.Id)
+                .SingleOrDefault();
+            var sub = DB.Subjects
+                .Include(x=>x.Student)
+                .Where(x => x.Title == subject.Title&&x.Student.IsGraduate==IsGraduate.否&&x.Student.MajorId==student.MajorId)
                 .SingleOrDefault();
             if (student == null)
             {
@@ -43,11 +44,6 @@ namespace EMWeb.Controllers
 
                     else
                     {
-                        //var teacherselected = DB.TeacherSelected
-                        //    .Where(x => x.StudentId == student.Id && x.TeacherId == DB.Teachers
-                        //    .Where(y => y.Name == teacher)
-                        //    .SingleOrDefault().Id)
-                        //    .SingleOrDefault();
                         var tea = DB.Teachers
                         .Where(x => x.Name == teacher)
                         .SingleOrDefault();
@@ -134,8 +130,10 @@ namespace EMWeb.Controllers
                     .ToList();
                 foreach(var x in subject)
                 {
-                    DB.Subjects.Remove(x);
+                    //DB.Subjects.Remove(x);
+                    x.Draw = Draw.未通过;
                 }
+                student.State = State.未锁定;
                 var info = new Information
                 {
                     SNumber = id,
@@ -194,6 +192,7 @@ namespace EMWeb.Controllers
                 foreach (var x in ordersub)
                 {
                     x.DrawTime = DateTime.Now;
+                    x.Draw = Draw.未通过;
                     DB.Logs.Add(new Log
                     {
                         Roles = Roles.老师,
@@ -202,7 +201,6 @@ namespace EMWeb.Controllers
                         UserId = User.Current.Id,
                         Number = x.Id,
                     });
-                    DB.Subjects.Remove(x);
                 }
                 var log = new Log
                 {
@@ -302,7 +300,7 @@ namespace EMWeb.Controllers
                         SubjectNumber=x.Id,
                     });
                 }
-                return View(ret);
+                return View(ret.OrderByDescending(x=>x.CreateTime).ToList());
             }
             else
             {
@@ -327,7 +325,7 @@ namespace EMWeb.Controllers
                         SubjectNumber = x.Id,
                     });
                 }
-                return View(ret);
+                return View(ret.OrderByDescending(x => x.CreateTime).ToList());
             }
         }
         /// <summary>
@@ -530,7 +528,7 @@ namespace EMWeb.Controllers
                     SubjectNumber = x.Id,
                 });
             }
-            return View(ret);
+            return View(ret.OrderByDescending(x=>x.CreateTime).ToList());
         }
         [AnyRoles("系主任,指导老师")]
         [HttpPost]
@@ -693,7 +691,8 @@ namespace EMWeb.Controllers
                 .ToList();
             foreach(var x in sub)
             {
-                DB.Subjects.Remove(x);
+                //DB.Subjects.Remove(x);
+                x.Draw = Draw.未通过;
             }
             var subject = new Subject
             {
